@@ -1,0 +1,3538 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>آزمایشگاه پیوندهای شیمیایی</title>
+
+  <!-- فونت فارسی وزیرمتن از گوگل فونتس -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       ۱. متغیرها و سیستم طراحی (تم آزمایشگاهی روشن، تمیز و پرکنتراست)
+       ============================================================ */
+    :root {
+      --bg-page: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-canvas: #ffffff;
+
+      --ink-primary: #0f172a;
+      --ink-secondary: #334155;
+      --ink-muted: #64748b;
+
+      --border-light: #e2e8f0;
+      --border-medium: #cbd5e1;
+
+      --brand: #0284c7;
+      --brand-hover: #0369a1;
+      --brand-soft: #e0f2fe;
+      --brand-ring: rgba(2, 132, 199, 0.28);
+
+      --emerald: #059669;
+      --emerald-soft: #d1fae5;
+      --emerald-border: #6ee7b7;
+
+      --amber: #d97706;
+      --amber-bright: #f59e0b;
+      --amber-soft: #fef3c7;
+      --amber-border: #fcd34d;
+
+      --rose: #e11d48;
+      --rose-soft: #ffe4e6;
+      --rose-border: #fda4af;
+
+      --violet: #7c3aed;
+      --violet-soft: #ede9fe;
+
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 24px;
+
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--ink-primary);
+      line-height: 1.6;
+      overflow: hidden;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    .ltr {
+      direction: ltr;
+      display: inline-block;
+      unicode-bidi: isolate;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* اسکرول‌بار ظریف برای داخل مودال‌ها */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* ============================================================
+       ۲. دکمه‌های عمومی
+       ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.28);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.06);
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.36);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+    }
+    .btn-emerald:hover { filter: brightness(1.06); }
+
+    .btn-outline {
+      background: var(--bg-surface);
+      color: var(--ink-secondary);
+      border-color: var(--border-medium);
+    }
+    .btn-outline:hover {
+      background: var(--bg-subtle);
+      color: var(--ink-primary);
+      border-color: #94a3b8;
+    }
+
+    .btn-danger-soft {
+      background: var(--rose-soft);
+      color: var(--rose);
+      border-color: var(--rose-border);
+    }
+    .btn-danger-soft:hover { background: #fecdd3; }
+
+    .btn-sm {
+      padding: 6px 11px;
+      font-size: 0.82rem;
+      border-radius: 9px;
+    }
+
+    /* ============================================================
+       ۳. صفحه اول (مینیمال، خلوت، شفاف و بدون اسکرول)
+       ============================================================ */
+    #welcome-screen {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 18px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(14, 165, 233, 0.11) 0%, transparent 42%),
+        radial-gradient(circle at 85% 82%, rgba(245, 158, 11, 0.1) 0%, transparent 42%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    }
+
+    .welcome-box {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+      z-index: 2;
+    }
+
+    .hero-logo {
+      width: 104px;
+      height: 76px;
+      filter: drop-shadow(0 10px 18px rgba(2, 132, 199, 0.18));
+      animation: floatLogo 4s ease-in-out infinite;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .welcome-title-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .welcome-title {
+      font-size: clamp(1.85rem, 4vw, 2.55rem);
+      font-weight: 900;
+      color: var(--ink-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .welcome-subtitle {
+      font-size: 1rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .mode-cards {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mode-card-btn {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 26px 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      position: relative;
+    }
+
+    .mode-card-btn:hover {
+      transform: translateY(-4px);
+    }
+
+    .mode-card-btn.challenge:hover {
+      border-color: var(--brand);
+      box-shadow: 0 14px 32px rgba(2, 132, 199, 0.18);
+    }
+
+    .mode-card-btn.free:hover {
+      border-color: var(--emerald);
+      box-shadow: 0 14px 32px rgba(5, 150, 105, 0.16);
+    }
+
+    .mode-card-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+    }
+
+    .mode-card-btn.challenge .mode-card-icon {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    .mode-card-btn.free .mode-card-icon {
+      background: var(--emerald-soft);
+      color: var(--emerald);
+    }
+
+    .mode-card-btn h2 {
+      font-size: 1.28rem;
+      font-weight: 800;
+      color: var(--ink-primary);
+    }
+
+    .mode-card-btn span.mode-sub {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .mode-progress-chip {
+      margin-top: 2px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: var(--brand-soft);
+      color: var(--brand-hover);
+    }
+
+    /* ============================================================
+       ۴. صفحه اصلی آزمایشگاه — تمام‌صفحه بدون اسکرول (100vh)
+       ============================================================ */
+    #game-screen {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg-page);
+    }
+
+    /* نوار بالایی باریک */
+    .top-header {
+      height: 54px;
+      flex-shrink: 0;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-light);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      z-index: 20;
+    }
+
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .header-stage-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      padding: 4px 12px;
+      border-radius: 999px;
+      min-width: 0;
+    }
+
+    .stage-pill {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--brand);
+      white-space: nowrap;
+    }
+
+    .stage-pill.free-pill {
+      color: var(--emerald);
+    }
+
+    .stage-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--border-medium);
+    }
+
+    .header-mol-name {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--ink-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-formula {
+      padding: 1px 8px;
+      border-radius: 7px;
+      background: var(--brand-soft);
+      color: var(--brand-hover);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .header-dative-tag {
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      color: #b45309;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* فضای دو ستونه اصلی (پنل کناری + بوم آزمایش) */
+    .lab-main {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    /* پنل ابزار کناری جمع‌وجور (بدون نیاز به اسکرول) */
+    .sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      overflow-y: auto;
+    }
+
+    .sidebar-top-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tool-section {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--ink-muted);
+      padding: 0 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    /* دکمه‌های اتم و پیوند و کنترل */
+    .tool-btn {
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border-light);
+      border-radius: 12px;
+      padding: 7px 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      color: var(--ink-secondary);
+      font-size: 0.77rem;
+      font-weight: 700;
+      transition: all 0.16s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    .tool-btn:hover {
+      background: #f1f5f9;
+      border-color: var(--border-medium);
+      color: var(--ink-primary);
+    }
+
+    .tool-btn.active {
+      background: var(--brand-soft);
+      border-color: var(--brand);
+      color: var(--brand-hover);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+    }
+
+    .tool-btn.erase-tool.active {
+      background: var(--rose-soft);
+      border-color: var(--rose);
+      color: var(--rose);
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.14);
+    }
+
+    /* دکمه متمایز و جمع‌وجور پیوند داتیو */
+    .tool-btn.dative-tool {
+      background: #fffbeb;
+      border-color: var(--amber-border);
+      color: #b45309;
+    }
+    .tool-btn.dative-tool:hover {
+      background: var(--amber-soft);
+      border-color: var(--amber-bright);
+    }
+    .tool-btn.dative-tool.active {
+      background: var(--amber-soft);
+      border-color: var(--amber);
+      color: #92400e;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
+    }
+
+    .atom-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.92rem;
+      direction: ltr;
+      box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.18);
+    }
+
+    .atom-cap {
+      font-size: 0.67rem;
+      color: var(--ink-muted);
+      font-weight: 600;
+    }
+
+    .bond-icon {
+      font-size: 1.25rem;
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--brand);
+      direction: ltr;
+    }
+
+    .tool-btn.dative-tool .bond-icon {
+      color: var(--amber);
+    }
+
+    .control-btn-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .control-btn-row .tool-btn {
+      padding: 7px 4px;
+      font-size: 0.72rem;
+      gap: 3px;
+    }
+
+    .validate-btn-wrap {
+      padding-top: 4px;
+      border-top: 1px solid var(--border-light);
+      position: sticky;
+      bottom: 0;
+      z-index: 3;
+      background: var(--bg-surface);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    #btn-validate {
+      width: 100%;
+      padding: 11px 12px;
+      font-size: 0.95rem;
+      border-radius: 13px;
+    }
+
+    /* افکت درخشش و پالس برای آموزش گام‌به‌گام مرحله ۱ */
+    @keyframes guidePulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.72), 0 0 0 3px #0284c7;
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(2, 132, 199, 0), 0 0 0 3px #0ea5e9;
+        transform: scale(1.04);
+      }
+    }
+
+    .tutorial-highlight {
+      animation: guidePulse 1.3s ease-in-out infinite !important;
+      border-color: var(--brand) !important;
+      z-index: 5;
+    }
+
+    /* ============================================================
+       ۵. محوطه بوم آزمایش (SVG Canvas) و نوارهای شناور روی بوم
+       ============================================================ */
+    .canvas-stage {
+      position: relative;
+      background: var(--bg-canvas);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      touch-action: none;
+    }
+
+    .canvas-stage.dative-mode {
+      border-color: var(--amber-bright);
+      box-shadow: inset 0 0 0 2px rgba(245, 158, 11, 0.16);
+    }
+
+    #lab-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      user-select: none;
+      touch-action: none;
+    }
+
+    /* نوار آموزش گام‌به‌گام (فقط مرحله ۱) */
+    .onboarding-banner {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      left: 12px;
+      z-index: 15;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
+      animation: slideDown 0.25s ease;
+    }
+
+    .onboarding-text-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .onboarding-step-badge {
+      background: #0ea5e9;
+      color: #fff;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .btn-skip-tutorial {
+      background: rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 9px;
+      padding: 5px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-skip-tutorial:hover { background: rgba(255, 255, 255, 0.22); }
+
+    /* نوار ابزار شناور خیلی کوچک روی بوم (وضعیت ابزار / حالت آزاد) */
+    .canvas-top-chip {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .status-chip {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-light);
+      color: var(--ink-secondary);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      pointer-events: none;
+    }
+
+    .status-chip.dative-chip {
+      background: #fffbeb;
+      border-color: var(--amber-border);
+      color: #b45309;
+    }
+
+    .canvas-corner-actions {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-fab {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--border-medium);
+      color: var(--ink-secondary);
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.16s ease;
+    }
+    .mini-fab:hover {
+      background: #f1f5f9;
+      color: var(--ink-primary);
+    }
+    .mini-fab.active-toggle {
+      background: var(--amber-soft);
+      border-color: var(--amber-border);
+      color: #92400e;
+    }
+
+    /* پیام شناور خطا یا نتیجه بررسی در پایین-راست بوم (بدون نیاز به اسکرول) */
+    .canvas-feedback {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      max-width: min(440px, calc(100% - 140px));
+      z-index: 14;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 0.84rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      animation: slideUp 0.22s ease;
+    }
+
+    .canvas-feedback.error {
+      background: #fff1f2;
+      border: 1.5px solid var(--rose-border);
+      color: #9f1239;
+    }
+    .canvas-feedback.warning {
+      background: #fffbeb;
+      border: 1.5px solid var(--amber-border);
+      color: #92400e;
+    }
+    .canvas-feedback.success {
+      background: #ecfdf5;
+      border: 1.5px solid var(--emerald-border);
+      color: #065f46;
+    }
+    .canvas-feedback.info {
+      background: #f0f9ff;
+      border: 1.5px solid #7dd3fc;
+      color: #075985;
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .feedback-close {
+      background: none;
+      border: none;
+      color: inherit;
+      opacity: 0.65;
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0 2px;
+    }
+    .feedback-close:hover { opacity: 1; }
+
+    .free-result-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .free-stat-pill {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(5, 150, 105, 0.28);
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #064e3b;
+    }
+
+    /* راهنمای ملایم وسط بوم وقتی صفحه خالی است */
+    .canvas-empty-hint {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      text-align: center;
+      color: #94a3b8;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* انیمیشن دایره هدف چشمک‌زن روی SVG در آموزش مرحله ۱ */
+    @keyframes targetBlink {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.16); opacity: 0.45; }
+    }
+    .svg-target-ring {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: targetBlink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes popDot {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.35); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .lone-dot-anim {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: popDot 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* ============================================================
+       ۶. مودال‌ها (شروع مرحله، تأیید و آزمون ۳ مرحله‌ای، مراحل، راهنما)
+       ============================================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.56);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+      animation: fadeIn 0.18s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 560px;
+      max-height: 92vh;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: popCard 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .modal-card.wide {
+      max-width: 820px;
+    }
+
+    @keyframes popCard {
+      from { opacity: 0; transform: scale(0.95) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 14px 20px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--ink-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-surface);
+      color: var(--ink-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover {
+      background: var(--rose-soft);
+      color: var(--rose);
+      border-color: var(--rose-border);
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* مودال شروع هر مرحله */
+    .stage-intro-body {
+      text-align: center;
+      align-items: center;
+      padding: 26px 24px 24px;
+      gap: 16px;
+    }
+
+    .intro-stage-badge {
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand-hover);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .intro-formula-box {
+      padding: 12px 28px;
+      border-radius: 16px;
+      background: var(--bg-subtle);
+      border: 2px solid var(--border-light);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--brand-hover);
+      letter-spacing: 0.04em;
+    }
+
+    .intro-message {
+      font-size: 1.04rem;
+      font-weight: 700;
+      color: var(--ink-primary);
+      max-width: 440px;
+    }
+
+    .intro-stage1-svg-box {
+      width: 100%;
+      max-width: 300px;
+      background: #f0f9ff;
+      border: 1.5px solid #bae6fd;
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .intro-dative-pill {
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      color: #b45309;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    /* مودال تأیید و آزمون ۳ مرحله‌ای */
+    .quiz-preview-box {
+      height: 196px;
+      background: radial-gradient(circle at center, #f8fafc 0%, #eef2f7 100%);
+      border: 1.5px solid var(--border-medium);
+      border-radius: 16px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .quiz-preview-box svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .quiz-preview-tag {
+      position: absolute;
+      top: 9px;
+      right: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #065f46;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .quiz-lone-revealed-tag {
+      position: absolute;
+      bottom: 9px;
+      left: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      color: #92400e;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .quiz-stepper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-pill-item {
+      padding: 8px 6px;
+      border-radius: 11px;
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border-light);
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ink-muted);
+      transition: all 0.2s;
+    }
+
+    .step-pill-item.active {
+      background: var(--brand-soft);
+      border-color: var(--brand);
+      color: var(--brand-hover);
+    }
+
+    .step-pill-item.done {
+      background: var(--emerald-soft);
+      border-color: var(--emerald-border);
+      color: #065f46;
+    }
+
+    .quiz-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 15px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-q-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--ink-primary);
+    }
+
+    .quiz-q-sub {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+    }
+
+    .quiz-input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .quiz-input-row .btn {
+      width: 100%;
+    }
+
+    .quiz-input {
+      flex: 1;
+      border: 1.5px solid var(--border-medium);
+      background: var(--bg-surface);
+      border-radius: 11px;
+      padding: 9px 14px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-align: center;
+      color: var(--ink-primary);
+      outline: none;
+    }
+    .quiz-input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-ring);
+    }
+
+    .quiz-inline-error {
+      background: var(--rose-soft);
+      border: 1px solid var(--rose-border);
+      color: #9f1239;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .quiz-complete-box {
+      background: #ecfdf5;
+      border: 1.5px solid var(--emerald-border);
+      border-radius: 15px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .summary-cell {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+    }
+
+    .summary-cell .s-lbl {
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      font-weight: 600;
+    }
+
+    .summary-cell .s-val {
+      font-size: 1.12rem;
+      font-weight: 900;
+      color: var(--ink-primary);
+    }
+
+    /* مودال فهرست ۲۴ مرحله */
+    .tier-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tier-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--ink-secondary);
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 5px;
+    }
+    .stages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 8px;
+    }
+    .stage-tile {
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border-light);
+      border-radius: 12px;
+      padding: 10px 11px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: right;
+      transition: all 0.18s;
+    }
+    .stage-tile:hover {
+      border-color: var(--brand);
+      background: #f0f9ff;
+      transform: translateY(-2px);
+    }
+    .stage-tile.done {
+      background: #ecfdf5;
+      border-color: var(--emerald-border);
+    }
+    .stage-tile.current {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-ring);
+    }
+
+    /* مودال راهنمای جامع ۴ تبی */
+    .guide-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 10px;
+    }
+    .guide-tab {
+      padding: 7px 13px;
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--border-light);
+      color: var(--ink-secondary);
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .guide-tab.active {
+      background: var(--brand-soft);
+      border-color: var(--brand);
+      color: var(--brand-hover);
+    }
+
+    .guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+    .guide-table th, .guide-table td {
+      padding: 9px 8px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .guide-table th {
+      background: #f1f5f9;
+      color: var(--ink-primary);
+      font-weight: 800;
+    }
+    .guide-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .guide-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 0.84rem;
+      color: var(--ink-secondary);
+    }
+    .guide-card.amber {
+      background: #fffbeb;
+      border-color: var(--amber-border);
+    }
+    .svg-demo-box {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: 11px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ============================================================
+       ۷. واکنش‌گرایی برای موبایل و تبلت
+       ============================================================ */
+    @media (max-width: 768px) {
+      #game-screen {
+        height: 100vh;
+        height: 100dvh;
+      }
+      .mode-cards, .guide-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .top-header {
+        height: auto;
+        padding: 8px 10px;
+        flex-wrap: wrap;
+      }
+      .lab-main {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) auto;
+        padding: 8px;
+        gap: 8px;
+      }
+      /* در موبایل بوم بالا و نوار ابزار فشرده پایین */
+      .canvas-stage { order: 1; }
+      .sidebar {
+        order: 2;
+        padding: 8px 10px;
+        gap: 8px;
+        max-height: 40vh;
+      }
+      .sidebar-top-groups {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .tool-section.control-section {
+        grid-column: 1 / -1;
+      }
+      .atom-badge { width: 24px; height: 24px; font-size: 0.8rem; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .quiz-stepper { grid-template-columns: 1fr; }
+    }
+
+
+    @media (max-height: 620px) {
+      .sidebar {
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       صفحه ۱: صفحه ورود (کاملاً خلوت، مدرن و شفاف)
+       ============================================================ -->
+  <section id="welcome-screen">
+    <div class="welcome-box">
+      <!-- لوگوی مولکولی -->
+      <svg class="hero-logo" viewBox="0 0 140 96" fill="none" aria-hidden="true">
+        <line x1="34" y1="44" x2="66" y2="44" stroke="#0284c7" stroke-width="3.6" stroke-linecap="round"/>
+        <line x1="34" y1="52" x2="66" y2="52" stroke="#0284c7" stroke-width="3.6" stroke-linecap="round"/>
+        <line x1="76" y1="48" x2="103" y2="48" stroke="#f59e0b" stroke-width="3.6" stroke-linecap="round"/>
+        <polygon points="109,48 99,42 99,54" fill="#f59e0b"/>
+        <circle cx="28" cy="48" r="16" fill="#e11d48" stroke="#fda4af" stroke-width="2.5"/>
+        <text x="28" y="53" text-anchor="middle" fill="#fff" font-size="14" font-weight="900">O</text>
+        <circle cx="70" cy="48" r="18" fill="#2563eb" stroke="#93c5fd" stroke-width="2.5"/>
+        <text x="70" y="53" text-anchor="middle" fill="#fff" font-size="15" font-weight="900">N</text>
+        <circle cx="118" cy="48" r="15" fill="#e11d48" stroke="#fda4af" stroke-width="2.5"/>
+        <text x="118" y="53" text-anchor="middle" fill="#fff" font-size="13" font-weight="900">O</text>
+      </svg>
+
+      <div class="welcome-title-wrap">
+        <h1 class="welcome-title">آزمایشگاه پیوندهای شیمیایی</h1>
+        <p class="welcome-subtitle">اتم‌ها را به هم پیوند بزن، مولکول بساز و صحت ساختار آن‌ها را بررسی کن</p>
+      </div>
+
+      <!-- دو کارت اصلی انتخاب حالت -->
+      <div class="mode-cards">
+        <button id="btn-start-challenge" class="mode-card-btn challenge" type="button">
+          <div class="mode-card-icon">🎯</div>
+          <h2>حالت چالشی</h2>
+          <span class="mode-sub">۲۴ مرحله آموزشی</span>
+          <span id="welcome-progress-chip" class="mode-progress-chip">۰ از ۲۴ تکمیل شده</span>
+        </button>
+
+        <button id="btn-start-free" class="mode-card-btn free" type="button">
+          <div class="mode-card-icon">⚗️</div>
+          <h2>حالت آزاد</h2>
+          <span class="mode-sub">ساخت و بررسی آزاد مولکول‌ها</span>
+        </button>
+      </div>
+
+      <button id="btn-welcome-guide" class="btn btn-outline" type="button">
+        📘 راهنمای جامع
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       صفحه ۲: محیط آزمایشگاه (تمام‌صفحه 100vh بدون نیاز به اسکرول)
+       ============================================================ -->
+  <section id="game-screen" class="hidden">
+    <!-- نوار بالای باریک -->
+    <header class="top-header">
+      <div class="header-right">
+        <button id="btn-go-home" class="btn btn-outline btn-sm" type="button">🏠 خانه</button>
+        <div class="header-stage-info">
+          <span id="header-stage-pill" class="stage-pill">مرحله ۱ از ۲۴</span>
+          <span id="header-sep" class="stage-sep"></span>
+          <span id="header-mol-name" class="header-mol-name">هیدروژن</span>
+          <span id="header-formula" class="header-formula ltr">H<sub>2</sub></span>
+          <span id="header-dative-tag" class="header-dative-tag hidden">⚡ داتیو</span>
+        </div>
+      </div>
+
+      <div class="header-left">
+        <button id="btn-stage-hint" class="btn btn-outline btn-sm" type="button" title="راهنمایی این مرحله">💡 راهنمایی</button>
+        <button id="btn-open-stages" class="btn btn-outline btn-sm" type="button">📋 فهرست مراحل (<span id="header-progress">۰/۲۴</span>)</button>
+        <button id="btn-open-guide" class="btn btn-primary btn-sm" type="button">📘 راهنما</button>
+        <button id="btn-toggle-sound" class="btn btn-outline btn-sm" type="button" title="قطع یا وصل صدا">🔊</button>
+      </div>
+    </header>
+
+    <!-- فضای اصلی دو ستونه: پنل ابزار جمع‌وجور + بوم آزمایش -->
+    <main class="lab-main">
+      <!-- پنل ابزار کناری (دقیقاً کنار صفحه آزمایش، بدون شماره‌گذاری در عناوین) -->
+      <aside class="sidebar">
+        <div class="sidebar-top-groups">
+          <!-- بخش اتم‌ها (گرید ۲×۲) -->
+          <div class="tool-section">
+            <div class="section-title"><span>اتم‌ها</span></div>
+            <div class="grid-2x2">
+              <button class="tool-btn" data-tool="atom-C" type="button">
+                <span class="atom-badge" style="background:#334155;color:#fff;border:2px solid #64748b;">C</span>
+                <span>کربن</span>
+                <span class="atom-cap">ظرفیت: ۴</span>
+              </button>
+              <button class="tool-btn" data-tool="atom-H" type="button">
+                <span class="atom-badge" style="background:#e0f2fe;color:#0369a1;border:2px solid #38bdf8;">H</span>
+                <span>هیدروژن</span>
+                <span class="atom-cap">ظرفیت: ۱</span>
+              </button>
+              <button class="tool-btn" data-tool="atom-O" type="button">
+                <span class="atom-badge" style="background:#e11d48;color:#fff;border:2px solid #fda4af;">O</span>
+                <span>اکسیژن</span>
+                <span class="atom-cap">ظرفیت: ۶</span>
+              </button>
+              <button class="tool-btn" data-tool="atom-N" type="button">
+                <span class="atom-badge" style="background:#2563eb;color:#fff;border:2px solid #93c5fd;">N</span>
+                <span>نیتروژن</span>
+                <span class="atom-cap">ظرفیت: ۵</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- بخش پیوندها (دقیقاً ۴ دکمه کوچک در گرید ۲×۲ بدون توضیح اضافی کنار داتیو) -->
+          <div class="tool-section">
+            <div class="section-title"><span>پیوندها</span></div>
+            <div class="grid-2x2">
+              <button class="tool-btn" data-tool="bond-1" type="button" title="پیوند کووالانسی یگانه">
+                <span class="bond-icon">—</span>
+                <span>یگانه</span>
+              </button>
+              <button class="tool-btn" data-tool="bond-2" type="button" title="پیوند کووالانسی دوگانه">
+                <span class="bond-icon">=</span>
+                <span>دوگانه</span>
+              </button>
+              <button class="tool-btn" data-tool="bond-3" type="button" title="پیوند کووالانسی سه‌گانه">
+                <span class="bond-icon">≡</span>
+                <span>سه‌گانه</span>
+              </button>
+              <button class="tool-btn dative-tool" data-tool="bond-dative" type="button" title="پیوند داتیو: از اتم دهنده به اتم پذیرنده">
+                <span class="bond-icon">→</span>
+                <span>داتیو</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- بخش ابزار کنترل (دقیقاً با عنوان «ابزار کنترل» و بدون شماره) -->
+          <div class="tool-section control-section">
+            <div class="section-title"><span>ابزار کنترل</span></div>
+            <div class="control-btn-row">
+              <button class="tool-btn active" data-tool="move" type="button" title="جابه‌جایی اتم‌ها">
+                <span style="font-size:1.05rem;">✋</span>
+                <span>جابه‌جایی</span>
+              </button>
+              <button class="tool-btn erase-tool" data-tool="erase" type="button" title="حذف اتم یا پیوند">
+                <span style="font-size:1.05rem;">🧹</span>
+                <span>پاک‌کن</span>
+              </button>
+              <button id="btn-clear" class="tool-btn" type="button" title="پاک کردن کل صفحه">
+                <span style="font-size:1.05rem;">🗑️</span>
+                <span>پاک کردن همه</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- دکمه برجسته بررسی مولکول -->
+        <div class="validate-btn-wrap">
+          <button id="btn-validate" class="btn btn-primary" type="button">
+            ✅ بررسی مولکول
+          </button>
+        </div>
+      </aside>
+
+      <!-- بوم آزمایش تعاملی SVG -->
+      <section id="canvas-stage" class="canvas-stage">
+        <!-- نوار آموزش تعاملی گام‌به‌گام (فقط در مرحله ۱ فعال می‌شود) -->
+        <div id="onboarding-banner" class="onboarding-banner hidden">
+          <div class="onboarding-text-wrap">
+            <span id="onboarding-step-badge" class="onboarding-step-badge">گام ۱ از ۶</span>
+            <span id="onboarding-step-text">ابتدا روی اتم هیدروژن (H) کلیک کن.</span>
+          </div>
+          <button id="btn-skip-tutorial" class="btn-skip-tutorial" type="button">رد کردن آموزش</button>
+        </div>
+
+        <!-- چیپ وضعیت ابزار فعال (سمت چپ بالا) -->
+        <div class="canvas-top-chip">
+          <span id="canvas-tool-chip" class="status-chip">ابزار فعال: جابه‌جایی</span>
+        </div>
+
+        <!-- بوم اصلی SVG -->
+        <svg id="lab-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="lab-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="14" cy="14" r="1.25" fill="#cbd5e1" opacity="0.65" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#lab-dots)" />
+          <g id="layer-tutorial"></g>
+          <g id="layer-bonds"></g>
+          <g id="layer-preview"></g>
+          <g id="layer-lonepairs"></g>
+          <g id="layer-atoms"></g>
+        </svg>
+
+        <!-- راهنمای محو بوم خالی -->
+        <div id="canvas-empty-hint" class="canvas-empty-hint">
+          <span style="font-size:2rem;opacity:0.55;">⚛️</span>
+          <span style="font-size:0.9rem;font-weight:700;">اتم انتخاب کن و روی صفحه آزمایش کلیک کن</span>
+        </div>
+
+        <!-- دکمه‌های کمکی ظریف گوشه پایین-چپ بوم -->
+        <div class="canvas-corner-actions">
+          <button id="btn-undo" class="mini-fab" type="button" title="بازگشت به حرکت قبل">↩️ واگرد</button>
+          <button id="btn-free-lonepairs" class="mini-fab hidden active-toggle" type="button" title="نمایش/مخفی کردن جفت‌های ناپیوندی">✨ جفت ناپیوندی</button>
+        </div>
+
+        <!-- کادر شناور بازخورد / خطا / نتیجه حالت آزاد -->
+        <div id="canvas-feedback" class="canvas-feedback hidden"></div>
+      </section>
+    </main>
+  </section>
+
+  <!-- ============================================================
+       مودال ۱: صفحه شروع هر مرحله (در مرحله ۱ با شکل H—H و در مراحل ۲-۲۴ فقط فرمول)
+       ============================================================ -->
+  <div id="stage-intro-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-body stage-intro-body">
+        <span id="intro-stage-badge" class="intro-stage-badge">مرحله ۱ از ۲۴</span>
+        <p id="intro-message" class="intro-message"></p>
+
+        <!-- کادر فرمول (برای مراحل ۲ تا ۲۴) -->
+        <div id="intro-formula-box" class="intro-formula-box ltr hidden"></div>
+
+        <!-- تگ پیوند داتیو برای مراحل ۱۹ تا ۲۴ -->
+        <span id="intro-dative-pill" class="intro-dative-pill hidden">⚡ این مولکول شامل پیوند داتیو (→) است</span>
+
+        <!-- شکل گرافیکی مولکول H—H (فقط و فقط برای مرحله ۱ نمایش داده می‌شود) -->
+        <div id="intro-stage1-graphic" class="intro-stage1-svg-box hidden">
+          <svg width="210" height="86" viewBox="0 0 210 86" aria-label="شکل مولکول هیدروژن">
+            <line x1="72" y1="43" x2="138" y2="43" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="56" cy="43" r="22" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/>
+            <text x="56" y="49" text-anchor="middle" fill="#0369a1" font-size="18" font-weight="900">H</text>
+            <circle cx="154" cy="43" r="22" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/>
+            <text x="154" y="49" text-anchor="middle" fill="#0369a1" font-size="18" font-weight="900">H</text>
+          </svg>
+          <span style="font-size:0.8rem;font-weight:700;color:#0369a1;">دو اتم هیدروژن با یک پیوند یگانه (<span class="ltr">H—H</span>)</span>
+        </div>
+
+        <button id="btn-start-stage-action" class="btn btn-primary" style="min-width:210px;padding:11px 22px;" type="button">
+          شروع ساخت
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       مودال ۲: صفحه تأیید مولکول + آزمون ۳ مرحله‌ای متوالی (حالت چالشی)
+       ============================================================ -->
+  <div id="quiz-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🎉 آفرین! مولکول درست ساخته شد</h3>
+        <button id="btn-close-quiz" class="modal-close" type="button" aria-label="بستن">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- ۱. نمایش شکل مولکول ساخته‌شده -->
+        <div class="quiz-preview-box">
+          <span class="quiz-preview-tag">✓ <span id="quiz-mol-label"></span></span>
+          <svg id="quiz-preview-svg" viewBox="0 0 400 200"></svg>
+          <span id="quiz-lone-tag" class="quiz-lone-revealed-tag hidden">✨ الکترون‌های غیراشتراکی آشکار شدند</span>
+        </div>
+
+        <!-- نوار ۳ مرحله آزمون -->
+        <div class="quiz-stepper">
+          <div id="q-step-1" class="step-pill-item active">۱. تعداد پیوندها</div>
+          <div id="q-step-2" class="step-pill-item">۲. الکترون اشتراکی</div>
+          <div id="q-step-3" class="step-pill-item">۳. الکترون غیراشتراکی</div>
+        </div>
+
+        <!-- جعبه سوال جاری -->
+        <div id="quiz-question-box" class="quiz-box">
+          <div id="quiz-q-title" class="quiz-q-title"></div>
+          <div id="quiz-q-sub" class="quiz-q-sub"></div>
+          <div class="quiz-input-row">
+            <input id="quiz-input" class="quiz-input" type="text" inputmode="numeric" autocomplete="off" placeholder="عدد پاسخ را بنویسید..." />
+            <button id="btn-submit-quiz" class="btn btn-primary" type="button">بررسی پاسخ</button>
+          </div>
+          <div id="quiz-error" class="quiz-inline-error hidden"></div>
+        </div>
+
+        <!-- بخش موفقیت کامل پس از پاسخ صحیح به سوال ۳ -->
+        <div id="quiz-complete-box" class="quiz-complete-box hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <strong style="color:#065f46;font-size:1rem;">🏆 هر ۳ پاسخ درست بود! مرحله تکمیل شد</strong>
+            <span id="quiz-summary-formula" class="header-formula ltr"></span>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-cell"><div class="s-lbl">کل پیوندها</div><div id="sum-bonds" class="s-val">0</div></div>
+            <div class="summary-cell"><div class="s-lbl">پیوند داتیو</div><div id="sum-dative" class="s-val" style="color:var(--amber);">0</div></div>
+            <div class="summary-cell"><div class="s-lbl">الکترون اشتراکی</div><div id="sum-shared" class="s-val" style="color:var(--brand);">0</div></div>
+            <div class="summary-cell"><div class="s-lbl">غیراشتراکی</div><div id="sum-lone" class="s-val" style="color:#b45309;">0</div></div>
+          </div>
+          <p id="quiz-fact" style="font-size:0.83rem;color:#064e3b;"></p>
+          <div style="display:flex;justify-content:flex-end;gap:8px;">
+            <button id="btn-quiz-stages" class="btn btn-outline btn-sm" type="button">📋 فهرست مراحل</button>
+            <button id="btn-next-stage" class="btn btn-emerald" type="button">مرحله بعدی ←</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       مودال ۳: فهرست ۲۴ مرحله حالت چالشی
+       ============================================================ -->
+  <div id="stages-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3>📋 فهرست مراحل (۲۴ مرحله آموزشی)</h3>
+        <button id="btn-close-stages" class="modal-close" type="button" aria-label="بستن">✕</button>
+      </div>
+      <div id="stages-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       مودال ۴: بخش راهنمای جامع (۴ تبی)
+       ============================================================ -->
+  <div id="guide-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3>📘 راهنمای جامع آزمایشگاه پیوندهای شیمیایی</h3>
+        <button id="btn-close-guide" class="modal-close" type="button" aria-label="بستن">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-tabs">
+          <button class="guide-tab active" data-gtab="atoms" type="button">۱. اتم‌ها و ظرفیت</button>
+          <button class="guide-tab" data-gtab="bonds" type="button">۲. پیوند کووالانسی و داتیو</button>
+          <button class="guide-tab" data-gtab="math" type="button">۳. فرمول‌های آزمون</button>
+          <button class="guide-tab" data-gtab="howto" type="button">۴. راهنمای محیط بازی</button>
+        </div>
+
+        <!-- تب ۱: جدول اتم‌ها -->
+        <div id="gtab-atoms" style="display:flex;flex-direction:column;gap:12px;">
+          <p style="font-size:0.87rem;color:var(--ink-secondary);">
+            برای پایداری، اتم <strong>هیدروژن</strong> به <strong>۲ الکترون</strong> (قاعده دوتایی) و اتم‌های <strong>کربن، نیتروژن و اکسیژن</strong> به <strong>۸ الکترون</strong> در لایه ظرفیت نیاز دارند (قاعده هشت‌تایی).
+          </p>
+          <div style="overflow-x:auto;">
+            <table class="guide-table">
+              <thead>
+                <tr>
+                  <th>اتم</th>
+                  <th>نماد</th>
+                  <th>الکترون ظرفیت</th>
+                  <th>آرایش هدف</th>
+                  <th>تعداد پیوند معمول</th>
+                  <th>مثال</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>هیدروژن</strong></td>
+                  <td><strong class="ltr" style="color:#0284c7;">H</strong></td>
+                  <td>۱</td>
+                  <td>۲ (دوتایی)</td>
+                  <td>۱ پیوند یگانه</td>
+                  <td><span class="ltr">H₂, H₂O</span></td>
+                </tr>
+                <tr>
+                  <td><strong>کربن</strong></td>
+                  <td><strong class="ltr" style="color:#334155;">C</strong></td>
+                  <td>۴</td>
+                  <td>۸ (هشت‌تایی)</td>
+                  <td>۴ پیوند</td>
+                  <td><span class="ltr">CH₄, CO₂</span></td>
+                </tr>
+                <tr>
+                  <td><strong>نیتروژن</strong></td>
+                  <td><strong class="ltr" style="color:#2563eb;">N</strong></td>
+                  <td>۵</td>
+                  <td>۸ (هشت‌تایی)</td>
+                  <td>۳ پیوند + ۱ جفت ناپیوندی</td>
+                  <td><span class="ltr">NH₃, N₂</span></td>
+                </tr>
+                <tr>
+                  <td><strong>اکسیژن</strong></td>
+                  <td><strong class="ltr" style="color:#e11d48;">O</strong></td>
+                  <td>۶</td>
+                  <td>۸ (هشت‌تایی)</td>
+                  <td>۲ پیوند + ۲ جفت ناپیوندی</td>
+                  <td><span class="ltr">H₂O, O₂</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- تب ۲: پیوندهای کووالانسی و داتیو -->
+        <div id="gtab-bonds" class="hidden" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="guide-grid-2">
+            <div class="guide-card">
+              <strong style="color:var(--brand-hover);">پیوندهای کووالانسی معمولی</strong>
+              <p>هر دو اتم به تعداد برابر الکترون به اشتراک می‌گذارند:</p>
+              <ul style="padding-right:16px;display:flex;flex-direction:column;gap:4px;">
+                <li><strong>یگانه (—):</strong> ۱ پیوند = ۲ الکترون اشتراکی</li>
+                <li><strong>دوگانه (=):</strong> ۲ پیوند = ۴ الکترون اشتراکی</li>
+                <li><strong>سه‌گانه (≡):</strong> ۳ پیوند = ۶ الکترون اشتراکی</li>
+              </ul>
+            </div>
+            <div class="svg-demo-box">
+              <svg width="250" height="108" viewBox="0 0 250 108">
+                <line x1="34" y1="22" x2="78" y2="22" stroke="#0284c7" stroke-width="3"/>
+                <circle cx="24" cy="22" r="11" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                <text x="24" y="26" text-anchor="middle" fill="#0369a1" font-size="10" font-weight="900">H</text>
+                <circle cx="88" cy="22" r="11" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                <text x="88" y="26" text-anchor="middle" fill="#0369a1" font-size="10" font-weight="900">H</text>
+                <text x="155" y="26" fill="#334155" font-size="11" font-weight="700">یگانه (۱ پیوند)</text>
+
+                <line x1="34" y1="51" x2="78" y2="51" stroke="#0284c7" stroke-width="2.6"/>
+                <line x1="34" y1="58" x2="78" y2="58" stroke="#0284c7" stroke-width="2.6"/>
+                <circle cx="24" cy="54" r="11" fill="#e11d48" stroke="#fda4af" stroke-width="2"/>
+                <text x="24" y="58" text-anchor="middle" fill="#fff" font-size="10" font-weight="900">O</text>
+                <circle cx="88" cy="54" r="11" fill="#e11d48" stroke="#fda4af" stroke-width="2"/>
+                <text x="88" y="58" text-anchor="middle" fill="#fff" font-size="10" font-weight="900">O</text>
+                <text x="155" y="58" fill="#334155" font-size="11" font-weight="700">دوگانه (۲ پیوند)</text>
+
+                <line x1="34" y1="80" x2="78" y2="80" stroke="#0284c7" stroke-width="2.3"/>
+                <line x1="34" y1="86" x2="78" y2="86" stroke="#0284c7" stroke-width="2.3"/>
+                <line x1="34" y1="92" x2="78" y2="92" stroke="#0284c7" stroke-width="2.3"/>
+                <circle cx="24" cy="86" r="11" fill="#2563eb" stroke="#93c5fd" stroke-width="2"/>
+                <text x="24" y="90" text-anchor="middle" fill="#fff" font-size="10" font-weight="900">N</text>
+                <circle cx="88" cy="86" r="11" fill="#2563eb" stroke="#93c5fd" stroke-width="2"/>
+                <text x="88" y="90" text-anchor="middle" fill="#fff" font-size="10" font-weight="900">N</text>
+                <text x="155" y="90" fill="#334155" font-size="11" font-weight="700">سه‌گانه (۳ پیوند)</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="guide-card amber">
+            <strong style="color:#b45309;font-size:0.95rem;">⚡ پیوند داتیو یا کوئوردینانسی (→)</strong>
+            <p style="color:#78350f;">
+              در پیوند داتیو، هر دو الکترون پیوند توسط <strong>اتم دهنده</strong> (دارای جفت الکترون ناپیوندی) در اختیار <strong>اتم پذیرنده</strong> قرار می‌گیرد. پیکان طلایی همیشه از <strong>دهنده ← پذیرنده</strong> رسم می‌شود و در شمارش برابر <strong>۱ پیوند</strong> است.
+            </p>
+            <div class="guide-grid-2">
+              <div class="svg-demo-box" style="flex-direction:column;gap:4px;">
+                <span style="font-size:0.78rem;font-weight:800;color:#92400e;">اوزون (<span class="ltr">O₃</span>): <span class="ltr">O = O → O</span></span>
+                <svg width="210" height="60" viewBox="0 0 210 60">
+                  <line x1="44" y1="26" x2="90" y2="26" stroke="#0284c7" stroke-width="3"/>
+                  <line x1="44" y1="34" x2="90" y2="34" stroke="#0284c7" stroke-width="3"/>
+                  <line x1="120" y1="30" x2="158" y2="30" stroke="#f59e0b" stroke-width="3.2"/>
+                  <polygon points="164,30 154,24 154,36" fill="#f59e0b"/>
+                  <circle cx="32" cy="30" r="14" fill="#e11d48" stroke="#fda4af" stroke-width="2"/>
+                  <text x="32" y="35" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">O</text>
+                  <circle cx="105" cy="30" r="14" fill="#e11d48" stroke="#fda4af" stroke-width="2"/>
+                  <text x="105" y="35" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">O</text>
+                  <circle cx="178" cy="30" r="14" fill="#e11d48" stroke="#fda4af" stroke-width="2"/>
+                  <text x="178" y="35" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">O</text>
+                </svg>
+              </div>
+              <div class="svg-demo-box" style="flex-direction:column;gap:4px;">
+                <span style="font-size:0.78rem;font-weight:800;color:#92400e;">کربن مونوکسید (<span class="ltr">CO</span>): دوگانه + داتیو <span class="ltr">O→C</span></span>
+                <svg width="210" height="60" viewBox="0 0 210 60">
+                  <line x1="72" y1="22" x2="138" y2="22" stroke="#0284c7" stroke-width="2.6"/>
+                  <line x1="72" y1="30" x2="138" y2="30" stroke="#0284c7" stroke-width="2.6"/>
+                  <line x1="138" y1="40" x2="80" y2="40" stroke="#f59e0b" stroke-width="2.8"/>
+                  <polygon points="73,40 83,35 83,45" fill="#f59e0b"/>
+                  <circle cx="58" cy="30" r="15" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+                  <text x="58" y="35" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">C</text>
+                  <circle cx="152" cy="30" r="15" fill="#e11d48" stroke="#fda4af" stroke-width="2"/>
+                  <text x="152" y="35" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">O</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- تب ۳: فرمول‌های محاسبه آزمون -->
+        <div id="gtab-math" class="hidden" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="guide-card">
+            <strong style="color:var(--brand-hover);">📐 فرمول‌های محاسبه پاسخ‌های آزمون ۳ مرحله‌ای</strong>
+            <ol style="padding-right:18px;display:flex;flex-direction:column;gap:6px;">
+              <li><strong>تعداد کل پیوندها:</strong> مجموع خطوط کووالانسی (یگانه=۱، دوگانه=۲، سه‌گانه=۳) + تعداد پیکان‌های داتیو (هر داتیو=۱).</li>
+              <li><strong>الکترون‌های اشتراکی:</strong> <code>تعداد کل پیوندها × ۲</code></li>
+              <li><strong>الکترون‌های غیراشتراکی:</strong> <code>مجموع الکترون‌های ظرفیت همه اتم‌ها − الکترون‌های اشتراکی</code></li>
+            </ol>
+          </div>
+          <div class="guide-grid-2">
+            <div class="guide-card">
+              <strong style="color:var(--emerald);">مثال ۱: آب (<span class="ltr">H₂O</span>)</strong>
+              <p>ساختار: <span class="ltr">H — O — H</span><br/>
+                • کل ظرفیت: <span class="ltr">1 + 1 + 6 = 8</span><br/>
+                • تعداد پیوند: <strong>۲</strong><br/>
+                • الکترون اشتراکی: <span class="ltr">2 × 2 =</span> <strong>۴</strong><br/>
+                • الکترون غیراشتراکی: <span class="ltr">8 − 4 =</span> <strong>۴</strong>
+              </p>
+            </div>
+            <div class="guide-card amber">
+              <strong style="color:#b45309;">مثال ۲: کربن مونوکسید (<span class="ltr">CO</span>)</strong>
+              <p>ساختار: <span class="ltr">C = O</span> همراه با داتیو <span class="ltr">O → C</span><br/>
+                • کل ظرفیت: <span class="ltr">4 + 6 = 10</span><br/>
+                • تعداد پیوند: <span class="ltr">2 + 1 =</span> <strong>۳</strong><br/>
+                • الکترون اشتراکی: <span class="ltr">3 × 2 =</span> <strong>۶</strong><br/>
+                • الکترون غیراشتراکی: <span class="ltr">10 − 6 =</span> <strong>۴</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- تب ۴: آموزش کار با محیط -->
+        <div id="gtab-howto" class="hidden" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="guide-grid-2">
+            <div class="guide-card">
+              <strong>۱. افزودن و جابه‌جایی اتم</strong>
+              <p>از پنل سمت راست روی اتم دلخواه کلیک کنید و سپس روی صفحه آزمایش بزنید تا قرار بگیرد. با ابزار «جابه‌جایی» می‌توانید اتم‌ها را بکشید و مرتب کنید.</p>
+            </div>
+            <div class="guide-card">
+              <strong>۲. رسم پیوند کووالانسی</strong>
+              <p>دکمه «یگانه»، «دوگانه» یا «سه‌گانه» را انتخاب کنید؛ سپس روی اتم اول و بعد روی اتم دوم کلیک کنید (یا از اتم اول به دوم بکشید).</p>
+            </div>
+            <div class="guide-card amber">
+              <strong>۳. رسم پیوند داتیو (→)</strong>
+              <p>دکمه طلایی «داتیو» را انتخاب کرده و ابتدا روی <strong>اتم دهنده</strong> و سپس روی <strong>اتم پذیرنده</strong> کلیک کنید. برای مولکول‌هایی مانند <span class="ltr">CO</span> می‌توانید هم‌زمان پیوند دوگانه و داتیو رسم کنید.</p>
+            </div>
+            <div class="guide-card">
+              <strong>۴. پاک کردن و بررسی</strong>
+              <p>با «پاک‌کن» یا راست‌کلیک روی هر اتم یا پیوند می‌توانید آن را حذف کنید. در پایان روی دکمه <strong>«بررسی مولکول»</strong> بزنید.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       منطق کامل بازی، موتور شیمی، ایزومورفیسم گراف، ۲۴ مرحله و آموزش گام‌به‌گام
+       ============================================================ -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         ۱. اطلاعات پایه اتم‌ها (C, H, O, N)
+         ============================================================ */
+      const ATOMS = {
+        H: { symbol: 'H', name: 'هیدروژن', valence: 1, target: 2, radius: 22, fill: '#e0f2fe', stroke: '#0284c7', text: '#0369a1' },
+        C: { symbol: 'C', name: 'کربن',    valence: 4, target: 8, radius: 27, fill: '#334155', stroke: '#64748b', text: '#ffffff' },
+        N: { symbol: 'N', name: 'نیتروژن', valence: 5, target: 8, radius: 26, fill: '#2563eb', stroke: '#93c5fd', text: '#ffffff' },
+        O: { symbol: 'O', name: 'اکسیژن',  valence: 6, target: 8, radius: 26, fill: '#e11d48', stroke: '#fda4af', text: '#ffffff' }
+      };
+
+      const TIERS = {
+        1: 'سطح ۱: مبتدی',
+        2: 'سطح ۲: متوسط',
+        3: 'سطح ۳: پیشرفته',
+        4: 'سطح ۴: پیوند داتیو'
+      };
+
+      /* ============================================================
+         ۲. ۲۴ مرحله کامل حالت چالشی (دقیقاً مطابق ترتیب خواسته‌شده)
+         فرمت یال: [u, v, covalentOrder, dativeDir]  (dativeDir: null | 'u->v' | 'v->u')
+         ============================================================ */
+      const STAGES = [
+        {
+          id: 1, tier: 1, name: 'هیدروژن', formulaHtml: 'H<sub>2</sub>', counts: { H: 2 }, hasDative: false,
+          hint: 'دو اتم هیدروژن را با یک پیوند یگانه (—) به هم وصل کنید.',
+          fact: 'هیدروژن سبک‌ترین و فراوان‌ترین عنصر جهان است.',
+          graph: { nodes: ['H', 'H'], edges: [[0, 1, 1, null]] }
+        },
+        {
+          id: 2, tier: 1, name: 'اکسیژن', formulaHtml: 'O<sub>2</sub>', counts: { O: 2 }, hasDative: false,
+          hint: 'هر اکسیژن به ۲ الکترون نیاز دارد؛ دو اتم اکسیژن را با پیوند دوگانه (=) به هم وصل کنید.',
+          fact: 'حدود ۲۱ درصد هوایی که تنفس می‌کنیم از گاز اکسیژن تشکیل شده است.',
+          graph: { nodes: ['O', 'O'], edges: [[0, 1, 2, null]] }
+        },
+        {
+          id: 3, tier: 1, name: 'نیتروژن', formulaHtml: 'N<sub>2</sub>', counts: { N: 2 }, hasDative: false,
+          hint: 'هر نیتروژن ۵ الکترون ظرفیت دارد و ۳ پیوند می‌خواهد؛ بین دو نیتروژن پیوند سه‌گانه (≡) بکشید.',
+          fact: 'پیوند سه‌گانه بین دو نیتروژن بسیار مستحکم است و حدود ۷۸ درصد هوا را تشکیل می‌دهد.',
+          graph: { nodes: ['N', 'N'], edges: [[0, 1, 3, null]] }
+        },
+        {
+          id: 4, tier: 1, name: 'آب', formulaHtml: 'H<sub>2</sub>O', counts: { H: 2, O: 1 }, hasDative: false,
+          hint: 'اکسیژن در مرکز است و با هر دو اتم هیدروژن پیوند یگانه تشکیل می‌دهد (H—O—H).',
+          fact: 'دو جفت الکترون ناپیوندی روی اکسیژن باعث ساختار خمیده و خواص حیاتی آب می‌شود.',
+          graph: { nodes: ['O', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null]] }
+        },
+        {
+          id: 5, tier: 1, name: 'آمونیاک', formulaHtml: 'NH<sub>3</sub>', counts: { N: 1, H: 3 }, hasDative: false,
+          hint: 'نیتروژن در مرکز با سه اتم هیدروژن پیوند یگانه می‌سازد.',
+          fact: 'آمونیاک ماده کلیدی در تولید کودهای شیمیایی است و یک جفت الکترون ناپیوندی دارد.',
+          graph: { nodes: ['N', 'H', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null]] }
+        },
+        {
+          id: 6, tier: 1, name: 'متان', formulaHtml: 'CH<sub>4</sub>', counts: { C: 1, H: 4 }, hasDative: false,
+          hint: 'کربن ۴ پیوند می‌سازد؛ چهار اتم هیدروژن را با پیوند یگانه به کربن مرکزی وصل کنید.',
+          fact: 'متان ساده‌ترین هیدروکربن و بخش اصلی گاز طبیعی خانگی است.',
+          graph: { nodes: ['C', 'H', 'H', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null], [0, 4, 1, null]] }
+        },
+        {
+          id: 7, tier: 2, name: 'کربن دی‌اکسید', formulaHtml: 'CO<sub>2</sub>', counts: { C: 1, O: 2 }, hasDative: false,
+          hint: 'کربن در وسط قرار دارد و با هر دو اکسیژن پیوند دوگانه تشکیل می‌دهد (O=C=O).',
+          fact: 'گیاهان در فرآیند فتوسنتز از کربن دی‌اکسید برای تولید اکسیژن و غذا استفاده می‌کنند.',
+          graph: { nodes: ['O', 'C', 'O'], edges: [[0, 1, 2, null], [1, 2, 2, null]] }
+        },
+        {
+          id: 8, tier: 2, name: 'فرمالدهید', formulaHtml: 'CH<sub>2</sub>O', counts: { C: 1, H: 2, O: 1 }, hasDative: false,
+          hint: 'کربن مرکزی یک پیوند دوگانه با اکسیژن و دو پیوند یگانه با دو هیدروژن دارد.',
+          fact: 'فرمالدهید ساده‌ترین آلدهید در شیمی آلی است.',
+          graph: { nodes: ['C', 'O', 'H', 'H'], edges: [[0, 1, 2, null], [0, 2, 1, null], [0, 3, 1, null]] }
+        },
+        {
+          id: 9, tier: 2, name: 'هیدروژن سیانید', formulaHtml: 'HCN', counts: { H: 1, C: 1, N: 1 }, hasDative: false,
+          hint: 'کربن در مرکز با هیدروژن پیوند یگانه و با نیتروژن پیوند سه‌گانه می‌سازد (H—C≡N).',
+          fact: 'مولکول HCN ساختاری کاملاً خطی دارد.',
+          graph: { nodes: ['H', 'C', 'N'], edges: [[0, 1, 1, null], [1, 2, 3, null]] }
+        },
+        {
+          id: 10, tier: 2, name: 'هیدروژن پراکسید', formulaHtml: 'H<sub>2</sub>O<sub>2</sub>', counts: { H: 2, O: 2 }, hasDative: false,
+          hint: 'دو اکسیژن با پیوند یگانه به هم متصل‌اند و به هر اکسیژن یک هیدروژن وصل است (H—O—O—H).',
+          fact: 'هیدروژن پراکسید یا آب اکسیژنه کاربرد گسترده‌ای به عنوان ضدعفونی‌کننده دارد.',
+          graph: { nodes: ['H', 'O', 'O', 'H'], edges: [[0, 1, 1, null], [1, 2, 1, null], [2, 3, 1, null]] }
+        },
+        {
+          id: 11, tier: 2, name: 'هیدرازین', formulaHtml: 'N<sub>2</sub>H<sub>4</sub>', counts: { N: 2, H: 4 }, hasDative: false,
+          hint: 'دو نیتروژن با پیوند یگانه به هم وصل هستند و به هر نیتروژن دو هیدروژن متصل است (H₂N—NH₂).',
+          fact: 'هیدرازین به عنوان سوخت پیشران در ماهواره‌ها و فضاپیماها به کار می‌رود.',
+          graph: { nodes: ['N', 'N', 'H', 'H', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null], [1, 4, 1, null], [1, 5, 1, null]] }
+        },
+        {
+          id: 12, tier: 2, name: 'اتان', formulaHtml: 'C<sub>2</sub>H<sub>6</sub>', counts: { C: 2, H: 6 }, hasDative: false,
+          hint: 'دو اتم کربن با پیوند یگانه به هم متصل‌اند و هر کربن با ۳ هیدروژن پیوند یگانه دارد (H₃C—CH₃).',
+          fact: 'اتان دومین آلکان ساده و از اجزای مهم گاز طبیعی است.',
+          graph: { nodes: ['C', 'C', 'H', 'H', 'H', 'H', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null], [0, 4, 1, null], [1, 5, 1, null], [1, 6, 1, null], [1, 7, 1, null]] }
+        },
+        {
+          id: 13, tier: 3, name: 'اتن (اتیلن)', formulaHtml: 'C<sub>2</sub>H<sub>4</sub>', counts: { C: 2, H: 4 }, hasDative: false,
+          hint: 'دو کربن با پیوند دوگانه (=) به هم وصل‌اند و به هر کربن دو هیدروژن متصل است.',
+          fact: 'اتیلن هورمون طبیعی رسیدن میوه‌ها و ماده اولیه ساخت پلاستیک پلی‌اتیلن است.',
+          graph: { nodes: ['C', 'C', 'H', 'H', 'H', 'H'], edges: [[0, 1, 2, null], [0, 2, 1, null], [0, 3, 1, null], [1, 4, 1, null], [1, 5, 1, null]] }
+        },
+        {
+          id: 14, tier: 3, name: 'اتین (استیلن)', formulaHtml: 'C<sub>2</sub>H<sub>2</sub>', counts: { C: 2, H: 2 }, hasDative: false,
+          hint: 'دو کربن با پیوند سه‌گانه (≡) به هم متصل‌اند و به هر کربن یک هیدروژن وصل است (H—C≡C—H).',
+          fact: 'گاز استیلن در جوشکاری و برش فلزات شعله‌ای با دمای بالای ۳۰۰۰ درجه ایجاد می‌کند.',
+          graph: { nodes: ['H', 'C', 'C', 'H'], edges: [[0, 1, 1, null], [1, 2, 3, null], [2, 3, 1, null]] }
+        },
+        {
+          id: 15, tier: 3, name: 'متانول', formulaHtml: 'CH<sub>3</sub>OH', counts: { C: 1, H: 4, O: 1 }, hasDative: false,
+          hint: 'سه هیدروژن و یک اکسیژن به کربن وصل هستند و هیدروژن چهارم به اکسیژن متصل است (H₃C—O—H).',
+          fact: 'متانول ساده‌ترین الکل است و به الکل چوب نیز معروف است.',
+          graph: { nodes: ['C', 'O', 'H', 'H', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null], [0, 4, 1, null], [1, 5, 1, null]] }
+        },
+        {
+          id: 16, tier: 3, name: 'متیل‌آمین', formulaHtml: 'CH<sub>5</sub>N', counts: { C: 1, H: 5, N: 1 }, hasDative: false,
+          hint: 'کربن و نیتروژن با پیوند یگانه وصل‌اند؛ ۳ هیدروژن به کربن و ۲ هیدروژن به نیتروژن متصل کنید (H₃C—NH₂).',
+          fact: 'متیل‌آمین ساده‌ترین آمین آلی و پیش‌ماده بسیاری از داروهاست.',
+          graph: { nodes: ['C', 'N', 'H', 'H', 'H', 'H', 'H'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null], [0, 4, 1, null], [1, 5, 1, null], [1, 6, 1, null]] }
+        },
+        {
+          id: 17, tier: 3, name: 'فرمیک اسید', formulaHtml: 'CH<sub>2</sub>O<sub>2</sub>', counts: { C: 1, H: 2, O: 2 }, hasDative: false,
+          hint: 'کربن با یک H (یگانه)، یک O (دوگانه) و گروه O—H (یگانه) پیوند دارد.',
+          fact: 'فرمیک اسید ساده‌ترین کربوکسیلیک اسید است و در نیش مورچه‌ها یافت می‌شود.',
+          graph: { nodes: ['H', 'C', 'O', 'O', 'H'], edges: [[0, 1, 1, null], [1, 2, 2, null], [1, 3, 1, null], [3, 4, 1, null]] }
+        },
+        {
+          id: 18, tier: 3, name: 'اوره', formulaHtml: 'CH<sub>4</sub>N<sub>2</sub>O', counts: { C: 1, H: 4, N: 2, O: 1 }, hasDative: false,
+          hint: 'کربن مرکزی یک پیوند دوگانه با O و دو پیوند یگانه با دو اتم N دارد؛ هر N هم به ۲ هیدروژن وصل است.',
+          fact: 'اوره نخستین ترکیب آلی بود که در آزمایشگاه از مواد معدنی سنتز شد.',
+          graph: { nodes: ['O', 'C', 'N', 'N', 'H', 'H', 'H', 'H'], edges: [[0, 1, 2, null], [1, 2, 1, null], [1, 3, 1, null], [2, 4, 1, null], [2, 5, 1, null], [3, 6, 1, null], [3, 7, 1, null]] }
+        },
+        // --- سطح ۴: مراحل تخصصی پیوند داتیو ---
+        {
+          id: 19, tier: 4, name: 'اوزون', formulaHtml: 'O<sub>3</sub>', counts: { O: 3 }, hasDative: true,
+          hint: 'دو اکسیژن را با پیوند دوگانه وصل کنید و سپس از اکسیژن وسط یک پیوند داتیو (→) به اکسیژن سوم بکشید (O=O→O).',
+          fact: 'لایه اوزون در جو زمین، پرتوهای فرابنفش مضر خورشید را جذب می‌کند.',
+          graph: { nodes: ['O', 'O', 'O'], edges: [[0, 1, 2, null], [1, 2, 0, 'u->v']] }
+        },
+        {
+          id: 20, tier: 4, name: 'کربن مونوکسید', formulaHtml: 'CO', counts: { C: 1, O: 1 }, hasDative: true,
+          hint: 'بین کربن و اکسیژن پیوند دوگانه (=) بکشید و سپس یک پیوند داتیو (→) از اکسیژن به سمت کربن (O→C) اضافه کنید.',
+          fact: 'در کربن مونوکسید، دو پیوند کووالانسی همراه با یک پیوند داتیو از اکسیژن به کربن، هر دو اتم را هشت‌تایی می‌کند.',
+          graph: { nodes: ['C', 'O'], edges: [[0, 1, 2, 'v->u']] }
+        },
+        {
+          id: 21, tier: 4, name: 'دی‌نیتروژن مونوکسید', formulaHtml: 'N<sub>2</sub>O', counts: { N: 2, O: 1 }, hasDative: true,
+          hint: 'بین دو نیتروژن پیوند سه‌گانه (≡) بکشید و از نیتروژن وسط یک پیوند داتیو به اکسیژن بدهید (N≡N→O).',
+          fact: 'دی‌نیتروژن مونوکسید به «گاز خنده» معروف است و در دندانپزشکی کاربرد دارد.',
+          graph: { nodes: ['N', 'N', 'O'], edges: [[0, 1, 3, null], [1, 2, 0, 'u->v']] }
+        },
+        {
+          id: 22, tier: 4, name: 'نیتریک اسید', formulaHtml: 'HNO<sub>3</sub>', counts: { H: 1, N: 1, O: 3 }, hasDative: true,
+          hint: 'گروه H—O را به نیتروژن وصل کنید. نیتروژن با یک اکسیژن پیوند دوگانه و به اکسیژن سوم پیوند داتیو (N→O) می‌دهد.',
+          fact: 'نیتریک اسید (تیزاب) از قوی‌ترین اسیدهای معدنی در صنایع شیمیایی است.',
+          graph: { nodes: ['H', 'O', 'N', 'O', 'O'], edges: [[0, 1, 1, null], [1, 2, 1, null], [2, 3, 2, null], [2, 4, 0, 'u->v']] }
+        },
+        {
+          id: 23, tier: 4, name: 'نیترومتان', formulaHtml: 'CH<sub>3</sub>NO<sub>2</sub>', counts: { C: 1, H: 3, N: 1, O: 2 }, hasDative: true,
+          hint: 'گروه CH₃ را با پیوند یگانه به نیتروژن وصل کنید؛ نیتروژن یک پیوند دوگانه (=O) و یک پیوند داتیو (→O) دارد.',
+          fact: 'نیترومتان ساده‌ترین ترکیب نیترو آلی است و به عنوان سوخت پرانرژی در مسابقات درگ استفاده می‌شود.',
+          graph: { nodes: ['C', 'H', 'H', 'H', 'N', 'O', 'O'], edges: [[0, 1, 1, null], [0, 2, 1, null], [0, 3, 1, null], [0, 4, 1, null], [4, 5, 2, null], [4, 6, 0, 'u->v']] }
+        },
+        {
+          id: 24, tier: 4, name: 'دی‌نیتروژن پنتاکسید', formulaHtml: 'N<sub>2</sub>O<sub>5</sub>', counts: { N: 2, O: 5 }, hasDative: true,
+          hint: 'یک اکسیژن پل در وسط به دو نیتروژن وصل است (N—O—N) و هر نیتروژن یک پیوند دوگانه (=O) و یک پیوند داتیو (→O) دارد.',
+          fact: 'دی‌نیتروژن پنتاکسید در واکنش با آب، نیتریک اسید تولید می‌کند.',
+          graph: { nodes: ['O', 'N', 'O', 'O', 'N', 'O', 'O'], edges: [[0, 1, 1, null], [1, 2, 2, null], [1, 3, 0, 'u->v'], [0, 4, 1, null], [4, 5, 2, null], [4, 6, 0, 'u->v']] }
+        }
+      ];
+
+      /* ============================================================
+         ۳. کتابخانه تکمیلی مولکول‌ها برای شناسایی در حالت آزاد
+         ============================================================ */
+      const EXTRA_MOLECULES = [
+        { name: 'اتانول', graph: { nodes: ['C','C','O','H','H','H','H','H','H'], edges: [[0,1,1,null],[1,2,1,null],[0,3,1,null],[0,4,1,null],[0,5,1,null],[1,6,1,null],[1,7,1,null],[2,8,1,null]] } },
+        { name: 'دی‌متیل اتر', graph: { nodes: ['C','O','C','H','H','H','H','H','H'], edges: [[0,1,1,null],[1,2,1,null],[0,3,1,null],[0,4,1,null],[0,5,1,null],[2,6,1,null],[2,7,1,null],[2,8,1,null]] } },
+        { name: 'استالدهید', graph: { nodes: ['C','C','O','H','H','H','H'], edges: [[0,1,1,null],[1,2,2,null],[0,3,1,null],[0,4,1,null],[0,5,1,null],[1,6,1,null]] } },
+        { name: 'استیک اسید (سرکه)', graph: { nodes: ['C','C','O','O','H','H','H','H'], edges: [[0,1,1,null],[1,2,2,null],[1,3,1,null],[3,4,1,null],[0,5,1,null],[0,6,1,null],[0,7,1,null]] } },
+        { name: 'استون', graph: { nodes: ['C','C','C','O','H','H','H','H','H','H'], edges: [[0,1,1,null],[1,2,1,null],[1,3,2,null],[0,4,1,null],[0,5,1,null],[0,6,1,null],[2,7,1,null],[2,8,1,null],[2,9,1,null]] } },
+        { name: 'پروپان', graph: { nodes: ['C','C','C','H','H','H','H','H','H','H','H'], edges: [[0,1,1,null],[1,2,1,null],[0,3,1,null],[0,4,1,null],[0,5,1,null],[1,6,1,null],[1,7,1,null],[2,8,1,null],[2,9,1,null],[2,10,1,null]] } },
+        { name: 'پروپن', graph: { nodes: ['C','C','C','H','H','H','H','H','H'], edges: [[0,1,2,null],[1,2,1,null],[0,3,1,null],[0,4,1,null],[1,5,1,null],[2,6,1,null],[2,7,1,null],[2,8,1,null]] } },
+        { name: 'پروپین', graph: { nodes: ['C','C','C','H','H','H','H'], edges: [[0,1,3,null],[1,2,1,null],[0,3,1,null],[2,4,1,null],[2,5,1,null],[2,6,1,null]] } },
+        { name: 'سیکلوپروپان', graph: { nodes: ['C','C','C','H','H','H','H','H','H'], edges: [[0,1,1,null],[1,2,1,null],[2,0,1,null],[0,3,1,null],[0,4,1,null],[1,5,1,null],[1,6,1,null],[2,7,1,null],[2,8,1,null]] } },
+        { name: 'نیترو اسید', graph: { nodes: ['H','O','N','O'], edges: [[0,1,1,null],[1,2,1,null],[2,3,2,null]] } },
+        { name: 'کربنیک اسید', graph: { nodes: ['C','O','O','O','H','H'], edges: [[0,1,2,null],[0,2,1,null],[0,3,1,null],[2,4,1,null],[3,5,1,null]] } },
+        { name: 'فرمامید', graph: { nodes: ['H','C','O','N','H','H'], edges: [[0,1,1,null],[1,2,2,null],[1,3,1,null],[3,4,1,null],[3,5,1,null]] } },
+        { name: 'استونیتریل', graph: { nodes: ['C','C','N','H','H','H'], edges: [[0,1,1,null],[1,2,3,null],[0,3,1,null],[0,4,1,null],[0,5,1,null]] } },
+        { name: 'هیدروکسیل‌آمین', graph: { nodes: ['N','O','H','H','H'], edges: [[0,1,1,null],[0,2,1,null],[0,3,1,null],[1,4,1,null]] } },
+        { name: 'دی‌ایمید', graph: { nodes: ['H','N','N','H'], edges: [[0,1,1,null],[1,2,2,null],[2,3,1,null]] } },
+        { name: 'دی‌نیتروژن تترااکسید', graph: { nodes: ['N','N','O','O','O','O'], edges: [[0,1,1,null],[0,2,2,null],[0,3,0,'u->v'],[1,4,2,null],[1,5,0,'u->v']] } },
+        { name: 'دی‌نیتروژن تری‌اکسید', graph: { nodes: ['O','N','N','O','O'], edges: [[0,1,2,null],[1,2,1,null],[2,3,2,null],[2,4,0,'u->v']] } },
+        { name: 'ایزوسیانیک اسید', graph: { nodes: ['H','N','C','O'], edges: [[0,1,1,null],[1,2,2,null],[2,3,2,null]] } },
+        { name: 'سیانیک اسید', graph: { nodes: ['H','O','C','N'], edges: [[0,1,1,null],[1,2,1,null],[2,3,3,null]] } },
+        { name: 'هیدروژن ایزوسیانید', graph: { nodes: ['H','N','C'], edges: [[0,1,1,null],[1,2,2,'u->v']] } }
+      ];
+
+      const KNOWN_MOLECULES = [
+        ...STAGES.map(s => ({ name: s.name, graph: s.graph })),
+        ...EXTRA_MOLECULES
+      ];
+
+      /* ============================================================
+         ۴. وضعیت برنامه (State)
+         ============================================================ */
+      const STORAGE_KEY = 'chemBondLab_v2_progress';
+
+      const state = {
+        mode: 'challenge', // 'challenge' | 'free'
+        stageIdx: 0,
+        completed: new Set(),
+        activeTool: 'move',
+        atoms: [],
+        edges: [],
+        nextAtomId: 1,
+        nextEdgeId: 1,
+        undoStack: [],
+
+        soundOn: true,
+        showFreeLonePairs: true,
+
+        // تعامل بوم
+        draggingId: null,
+        dragOffX: 0,
+        dragOffY: 0,
+        dragMoved: false,
+        bondStartId: null,
+        isDrawDrag: false,
+        pointer: { x: 0, y: 0 },
+
+        // آموزش گام‌به‌گام اختصاصی مرحله ۱
+        onboardingActive: false,
+
+        // آزمون ۳ مرحله‌ای
+        quiz: { step: 1, stats: null, stage: null }
+      };
+
+      /* ============================================================
+         ۵. صدای لطیف تعاملی (Web Audio API)
+         ============================================================ */
+      let audioCtx = null;
+      function beep(freq, dur = 0.08, type = 'sine', vol = 0.06, delay = 0) {
+        if (!state.soundOn) return;
+        try {
+          if (!audioCtx) {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            audioCtx = new Ctx();
+          }
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+          g.gain.setValueAtTime(vol, audioCtx.currentTime + delay);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + dur);
+          osc.connect(g);
+          g.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + delay);
+          osc.stop(audioCtx.currentTime + delay + dur);
+        } catch (e) {}
+      }
+
+      const SFX = {
+        pop: () => beep(540, 0.07),
+        bond: () => beep(680, 0.08, 'triangle'),
+        dative: () => { beep(587, 0.08, 'triangle', 0.06, 0); beep(880, 0.1, 'sine', 0.06, 0.06); },
+        erase: () => beep(250, 0.08, 'sawtooth', 0.045),
+        error: () => { beep(220, 0.11, 'sawtooth', 0.05, 0); beep(175, 0.13, 'sawtooth', 0.05, 0.08); },
+        ok: () => { beep(523, 0.09, 'sine', 0.06, 0); beep(659, 0.09, 'sine', 0.06, 0.07); beep(784, 0.14, 'sine', 0.07, 0.14); },
+        win: () => [523, 659, 784, 1046].forEach((f, i) => beep(f, 0.16, 'triangle', 0.07, i * 0.08))
+      };
+
+      /* ============================================================
+         ۶. توابع کمکی
+         ============================================================ */
+      const toFa = (n) => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+      const toEnDigits = (s) => String(s)
+        .replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+        .replace(/[٠-٩]/g, d => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+        .trim();
+
+      function loadProgress() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) state.completed = new Set(parsed.filter(Number.isInteger));
+          }
+        } catch (e) {}
+      }
+
+      function saveProgress() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.completed]));
+        } catch (e) {}
+        updateProgressDisplays();
+      }
+
+      function updateProgressDisplays() {
+        const c = state.completed.size;
+        const t = STAGES.length;
+        document.getElementById('welcome-progress-chip').textContent = `${toFa(c)} از ${toFa(t)} تکمیل شده`;
+        document.getElementById('header-progress').textContent = `${toFa(c)}/${toFa(t)}`;
+      }
+
+      function pushUndo() {
+        state.undoStack.push({
+          atoms: state.atoms.map(a => ({ ...a })),
+          edges: state.edges.map(e => ({ ...e }))
+        });
+        if (state.undoStack.length > 35) state.undoStack.shift();
+      }
+
+      function countsMatch(atoms, targetCounts) {
+        const cur = {};
+        atoms.forEach(a => { cur[a.type] = (cur[a.type] || 0) + 1; });
+        const keys = new Set([...Object.keys(cur), ...Object.keys(targetCounts)]);
+        for (const k of keys) {
+          if ((cur[k] || 0) !== (targetCounts[k] || 0)) return false;
+        }
+        return true;
+      }
+
+      function formatFormulaHtml(atoms) {
+        if (!atoms.length) return '—';
+        const counts = {};
+        atoms.forEach(a => { counts[a.type] = (counts[a.type] || 0) + 1; });
+        const order = counts.C ? ['C', 'H', 'N', 'O'] : ['H', 'N', 'O', 'C'];
+        return order.filter(el => counts[el]).map(el => el + (counts[el] > 1 ? `<sub>${counts[el]}</sub>` : '')).join('');
+      }
+
+      /* ============================================================
+         ۷. موتور اعتبارسنجی دقیق شیمیایی (کووالانسی + داتیو + تشخیص جهت برعکس)
+         ============================================================ */
+      function analyzeMolecule(atoms, edges) {
+        const perAtom = new Map();
+        const atomById = new Map();
+
+        atoms.forEach(a => {
+          atomById.set(a.id, a);
+          const meta = ATOMS[a.type];
+          perAtom.set(a.id, {
+            id: a.id, type: a.type, meta,
+            B_norm: 0, D_out: 0, D_in: 0,
+            loneElectrons: meta.valence,
+            shellElectrons: meta.valence,
+            valid: false
+          });
+        });
+
+        let totalCovalent = 0;
+        let totalDative = 0;
+
+        edges.forEach(e => {
+          const ia = perAtom.get(e.a);
+          const ib = perAtom.get(e.b);
+          if (!ia || !ib) return;
+
+          if (e.covalent > 0) {
+            ia.B_norm += e.covalent;
+            ib.B_norm += e.covalent;
+            totalCovalent += e.covalent;
+          }
+          if (e.dativeDir === 'a->b') {
+            ia.D_out += 1;
+            ib.D_in += 1;
+            totalDative += 1;
+          } else if (e.dativeDir === 'b->a') {
+            ib.D_out += 1;
+            ia.D_in += 1;
+            totalDative += 1;
+          }
+        });
+
+        let nonBonding = 0;
+        const errors = [];
+
+        perAtom.forEach(info => {
+          const v = info.meta.valence;
+          const target = info.meta.target;
+          info.loneElectrons = v - info.B_norm - 2 * info.D_out;
+          info.shellElectrons = v + info.B_norm + 2 * info.D_in;
+
+          if (info.loneElectrons < 0) {
+            info.valid = false;
+            if (info.D_out > 0 && (v - info.B_norm) < 2 * info.D_out) {
+              errors.push(`اتم ${info.meta.name} (${info.type}) جفت الکترون ناپیوندی کافی برای دادن پیوند داتیو ندارد.`);
+            } else {
+              errors.push(`اتم ${info.meta.name} (${info.type}) بیش از ظرفیت مجاز خود پیوند دارد.`);
+            }
+          } else if (info.shellElectrons > target) {
+            info.valid = false;
+            errors.push(`اتم ${info.meta.name} (${info.type}) از آرایش ${target === 2 ? 'دوتایی' : 'هشت‌تایی'} فراتر رفته است (${toFa(info.shellElectrons)} از ${toFa(target)}).`);
+          } else if (info.shellElectrons < target) {
+            info.valid = false;
+            errors.push(`اتم ${info.meta.name} (${info.type}) هنوز به آرایش ${target === 2 ? 'دوتایی' : 'هشت‌تایی'} نرسیده است (${toFa(info.shellElectrons)} از ${toFa(target)}).`);
+          } else {
+            info.valid = true;
+          }
+
+          if (info.loneElectrons > 0) nonBonding += info.loneElectrons;
+        });
+
+        // تشخیص هوشمند جهت برعکس پیوند داتیو
+        let reversedDativeMsg = null;
+        if (errors.length > 0 && totalDative > 0) {
+          for (const e of edges) {
+            if (!e.dativeDir) continue;
+            const donorId = e.dativeDir === 'a->b' ? e.a : e.b;
+            const acceptorId = e.dativeDir === 'a->b' ? e.b : e.a;
+            const donorInfo = perAtom.get(donorId);
+            const accInfo = perAtom.get(acceptorId);
+            if (!donorInfo.valid || !accInfo.valid) {
+              // آزمون شبیه‌سازی برعکس کردن همین پیکان داتیو
+              const flippedEdges = edges.map(ed => ed.id === e.id
+                ? { ...ed, dativeDir: ed.dativeDir === 'a->b' ? 'b->a' : 'a->b' }
+                : ed
+              );
+              const sim = checkQuickValidity(atoms, flippedEdges, donorId, acceptorId);
+              if (sim.bothValid) {
+                reversedDativeMsg = `جهت پیوند داتیو بین ${accInfo.meta.name} (${accInfo.type}) و ${donorInfo.meta.name} (${donorInfo.type}) برعکس است! فلش باید از ${accInfo.type} به ${donorInfo.type} باشد.`;
+                break;
+              }
+            }
+          }
+        }
+
+        // بررسی همبندی گراف
+        let isConnected = false;
+        if (atoms.length >= 2) {
+          const adj = new Map(atoms.map(a => [a.id, []]));
+          edges.forEach(e => {
+            if (e.covalent > 0 || e.dativeDir) {
+              adj.get(e.a)?.push(e.b);
+              adj.get(e.b)?.push(e.a);
+            }
+          });
+          const vis = new Set([atoms[0].id]);
+          const q = [atoms[0].id];
+          while (q.length) {
+            const u = q.shift();
+            for (const nxt of (adj.get(u) || [])) {
+              if (!vis.has(nxt)) { vis.add(nxt); q.push(nxt); }
+            }
+          }
+          isConnected = vis.size === atoms.length;
+        }
+
+        const totalBonds = totalCovalent + totalDative;
+        const sharedElectrons = totalBonds * 2;
+        const uniqueErrors = reversedDativeMsg ? [reversedDativeMsg] : [...new Set(errors)];
+
+        return {
+          perAtom,
+          totalCovalent,
+          totalDative,
+          totalBonds,
+          sharedElectrons,
+          nonBonding,
+          isConnected,
+          errors: uniqueErrors,
+          chemicallyValid: atoms.length >= 2 && isConnected && errors.length === 0
+        };
+      }
+
+      function checkQuickValidity(atoms, edges, id1, id2) {
+        const calc = new Map();
+        atoms.forEach(a => calc.set(a.id, { v: ATOMS[a.type].valence, t: ATOMS[a.type].target, b: 0, dout: 0, din: 0 }));
+        edges.forEach(e => {
+          const ca = calc.get(e.a), cb = calc.get(e.b);
+          if (!ca || !cb) return;
+          ca.b += e.covalent; cb.b += e.covalent;
+          if (e.dativeDir === 'a->b') { ca.dout++; cb.din++; }
+          else if (e.dativeDir === 'b->a') { cb.dout++; ca.din++; }
+        });
+        const isOk = (id) => {
+          const c = calc.get(id);
+          return (c.v - c.b - 2 * c.dout >= 0) && (c.v + c.b + 2 * c.din === c.t);
+        };
+        return { bothValid: isOk(id1) && isOk(id2) };
+      }
+
+      /* ============================================================
+         ۸. ایزومورفیسم گراف (با حفظ نوع اتم، مرتبه کووالانسی و جهت داتیو)
+         ============================================================ */
+      function buildGraph(atoms, edges) {
+        const idxMap = new Map();
+        const nodes = atoms.map((a, i) => { idxMap.set(a.id, i); return a.type; });
+        const normEdges = [];
+        edges.forEach(e => {
+          if (e.covalent > 0 || e.dativeDir) {
+            const u = idxMap.get(e.a), v = idxMap.get(e.b);
+            if (u !== undefined && v !== undefined) {
+              const d = e.dativeDir === 'a->b' ? 'u->v' : e.dativeDir === 'b->a' ? 'v->u' : null;
+              normEdges.push([u, v, e.covalent, d]);
+            }
+          }
+        });
+        return { nodes, edges: normEdges };
+      }
+
+      function getSignatures(g) {
+        const n = g.nodes.length;
+        const st = Array.from({ length: n }, (_, i) => ({ el: g.nodes[i], c1: 0, c2: 0, c3: 0, dout: 0, din: 0 }));
+        const adj = Array.from({ length: n }, () => new Map());
+        for (const [u, v, cov, d] of g.edges) {
+          if (cov === 1) { st[u].c1++; st[v].c1++; }
+          else if (cov === 2) { st[u].c2++; st[v].c2++; }
+          else if (cov === 3) { st[u].c3++; st[v].c3++; }
+          let dir = 0;
+          if (d === 'u->v') { st[u].dout++; st[v].din++; dir = 1; }
+          else if (d === 'v->u') { st[v].dout++; st[u].din++; dir = -1; }
+          adj[u].set(v, `${cov}:${dir}`);
+          adj[v].set(u, `${cov}:${-dir}`);
+        }
+        return { sigs: st.map(s => `${s.el}|${s.c1}|${s.c2}|${s.c3}|${s.dout}|${s.din}`), adj };
+      }
+
+      function isIsomorphic(g1, g2) {
+        if (g1.nodes.length !== g2.nodes.length || g1.edges.length !== g2.edges.length) return false;
+        const n = g1.nodes.length;
+        if (n === 0) return true;
+        const r1 = getSignatures(g1), r2 = getSignatures(g2);
+        const s1 = [...r1.sigs].sort(), s2 = [...r2.sigs].sort();
+        for (let i = 0; i < n; i++) if (s1[i] !== s2[i]) return false;
+
+        const candsMap = new Map();
+        for (let j = 0; j < n; j++) {
+          const s = r2.sigs[j];
+          if (!candsMap.has(s)) candsMap.set(s, []);
+          candsMap.get(s).push(j);
+        }
+        const order = Array.from({ length: n }, (_, i) => i)
+          .sort((a, b) => candsMap.get(r1.sigs[a]).length - candsMap.get(r1.sigs[b]).length);
+
+        const map = new Array(n).fill(-1);
+        const used = new Array(n).fill(false);
+
+        function dfs(pos) {
+          if (pos === n) return true;
+          const u1 = order[pos];
+          for (const u2 of candsMap.get(r1.sigs[u1])) {
+            if (used[u2]) continue;
+            let ok = true;
+            for (let p = 0; p < pos; p++) {
+              const p1 = order[p], p2 = map[p1];
+              if ((r1.adj[u1].get(p1) || null) !== (r2.adj[u2].get(p2) || null)) { ok = false; break; }
+            }
+            if (!ok) continue;
+            map[u1] = u2; used[u2] = true;
+            if (dfs(pos + 1)) return true;
+            map[u1] = -1; used[u2] = false;
+          }
+          return false;
+        }
+        return dfs(0);
+      }
+
+      function identifyMolecule(atoms, edges) {
+        const g = buildGraph(atoms, edges);
+        for (const m of KNOWN_MOLECULES) {
+          if (isIsomorphic(g, m.graph)) return m;
+        }
+        return null;
+      }
+
+      /* ============================================================
+         ۹. رندرینگ SVG (اتم‌ها، پیوند کووالانسی + داتیو، جفت‌های ناپیوندی، آموزش مرحله ۱)
+         ============================================================ */
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      function svgEl(tag, attrs = {}) {
+        const el = document.createElementNS(SVG_NS, tag);
+        for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+        return el;
+      }
+
+      function computeLoneDots(atom, allAtoms, allEdges, loneCount) {
+        const pairs = Math.floor(loneCount / 2);
+        if (pairs <= 0) return [];
+        const byId = new Map(allAtoms.map(a => [a.id, a]));
+        const angles = [];
+        allEdges.forEach(e => {
+          if (!(e.covalent > 0 || e.dativeDir)) return;
+          const oid = e.a === atom.id ? e.b : (e.b === atom.id ? e.a : null);
+          if (oid !== null && byId.has(oid)) {
+            const o = byId.get(oid);
+            angles.push(Math.atan2(o.y - atom.y, o.x - atom.x));
+          }
+        });
+
+        let pairAngles = [];
+        if (angles.length === 0) {
+          for (let i = 0; i < pairs; i++) pairAngles.push(-Math.PI / 2 + (i * 2 * Math.PI) / pairs);
+        } else if (angles.length === 1) {
+          const opp = angles[0] + Math.PI;
+          if (pairs === 1) pairAngles = [opp];
+          else if (pairs === 2) pairAngles = [opp - 0.85, opp + 0.85];
+          else pairAngles = [opp, opp - 1.25, opp + 1.25];
+        } else {
+          const sorted = angles.map(a => a < 0 ? a + 2 * Math.PI : a).sort((a, b) => a - b);
+          let bestGap = -1, bestMid = 0;
+          for (let i = 0; i < sorted.length; i++) {
+            const cur = sorted[i];
+            const nxt = i + 1 < sorted.length ? sorted[i + 1] : sorted[0] + 2 * Math.PI;
+            if (nxt - cur > bestGap) { bestGap = nxt - cur; bestMid = cur + (nxt - cur) / 2; }
+          }
+          if (pairs === 1) pairAngles = [bestMid];
+          else if (pairs === 2) { const sp = Math.min(0.68, bestGap * 0.27); pairAngles = [bestMid - sp, bestMid + sp]; }
+          else { const sp = Math.min(0.85, bestGap * 0.34); pairAngles = [bestMid, bestMid - sp, bestMid + sp]; }
+        }
+
+        const r = ATOMS[atom.type].radius + 9;
+        const sep = 4.5;
+        const dots = [];
+        pairAngles.forEach(ang => {
+          const cx = atom.x + Math.cos(ang) * r;
+          const cy = atom.y + Math.sin(ang) * r;
+          const tx = -Math.sin(ang) * sep;
+          const ty = Math.cos(ang) * sep;
+          dots.push({ x: cx + tx, y: cy + ty }, { x: cx - tx, y: cy - ty });
+        });
+        return dots;
+      }
+
+      function renderEdge(edge, a, b, interactive = true) {
+        const g = svgEl('g');
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 1) return g;
+        const ux = dx / dist, uy = dy / dist;
+        const nx = -uy, ny = ux;
+        const rA = ATOMS[a.type].radius, rB = ATOMS[b.type].radius;
+
+        if (interactive) {
+          const hit = svgEl('line', {
+            x1: a.x, y1: a.y, x2: b.x, y2: b.y,
+            stroke: 'transparent', 'stroke-width': 26, style: 'cursor:pointer;'
+          });
+          hit.addEventListener('pointerdown', ev => onEdgeDown(ev, edge.id));
+          hit.addEventListener('contextmenu', ev => { ev.preventDefault(); removeEdge(edge.id); });
+          g.appendChild(hit);
+        }
+
+        const tracks = [];
+        for (let i = 0; i < edge.covalent; i++) tracks.push({ kind: 'cov' });
+        if (edge.dativeDir) tracks.push({ kind: 'dat', dir: edge.dativeDir });
+
+        const gap = tracks.length >= 3 ? 7.5 : 8.5;
+        tracks.forEach((tr, idx) => {
+          const off = (idx - (tracks.length - 1) / 2) * gap;
+          const ox = nx * off, oy = ny * off;
+
+          if (tr.kind === 'cov') {
+            g.appendChild(svgEl('line', {
+              x1: a.x + ux * (rA - 2) + ox, y1: a.y + uy * (rA - 2) + oy,
+              x2: b.x - ux * (rB - 2) + ox, y2: b.y - uy * (rB - 2) + oy,
+              stroke: '#0f172a', 'stroke-width': 3.5, 'stroke-linecap': 'round', 'pointer-events': 'none'
+            }));
+          } else {
+            const fromA = tr.dir === 'a->b';
+            const src = fromA ? a : b, dst = fromA ? b : a;
+            const dX = fromA ? ux : -ux, dY = fromA ? uy : -uy;
+            const rSrc = ATOMS[src.type].radius, rDst = ATOMS[dst.type].radius;
+
+            const sx = src.x + dX * (rSrc + 2) + ox, sy = src.y + dY * (rSrc + 2) + oy;
+            const tipX = dst.x - dX * (rDst + 5) + ox, tipY = dst.y - dY * (rDst + 5) + oy;
+            const aLen = 11, aHalf = 5.4;
+            const bx = tipX - dX * aLen, by = tipY - dY * aLen;
+
+            g.appendChild(svgEl('line', {
+              x1: sx, y1: sy, x2: bx + dX * 2, y2: by + dY * 2,
+              stroke: '#d97706', 'stroke-width': 3.6, 'stroke-linecap': 'round', 'pointer-events': 'none'
+            }));
+            const p1x = bx + (-dY) * aHalf, p1y = by + dX * aHalf;
+            const p2x = bx - (-dY) * aHalf, p2y = by - dX * aHalf;
+            g.appendChild(svgEl('polygon', {
+              points: `${tipX},${tipY} ${p1x},${p1y} ${p2x},${p2y}`,
+              fill: '#f59e0b', stroke: '#b45309', 'stroke-width': 0.9, 'pointer-events': 'none'
+            }));
+          }
+        });
+        return g;
+      }
+
+      function renderAtom(atom, analysis, opts = {}) {
+        const { interactive = true, isSelected = false, showRing = false, tutHighlight = false } = opts;
+        const m = ATOMS[atom.type];
+        const g = svgEl('g', { style: interactive ? 'cursor:grab;' : '' });
+
+        if (tutHighlight) {
+          g.appendChild(svgEl('circle', {
+            cx: atom.x, cy: atom.y, r: m.radius + 9,
+            fill: 'none', stroke: '#0284c7', 'stroke-width': 3, 'stroke-dasharray': '6 4',
+            class: 'svg-target-ring', 'pointer-events': 'none'
+          }));
+        }
+
+        if (isSelected) {
+          g.appendChild(svgEl('circle', {
+            cx: atom.x, cy: atom.y, r: m.radius + 7,
+            fill: 'none', stroke: state.activeTool === 'bond-dative' ? '#f59e0b' : '#0284c7',
+            'stroke-width': 2.6, 'stroke-dasharray': '5 4', 'pointer-events': 'none'
+          }));
+        }
+
+        if (showRing && analysis) {
+          const info = analysis.perAtom.get(atom.id);
+          if (info) {
+            const col = info.valid ? '#10b981' : (info.loneElectrons < 0 || info.shellElectrons > m.target ? '#e11d48' : '#cbd5e1');
+            g.appendChild(svgEl('circle', {
+              cx: atom.x, cy: atom.y, r: m.radius + 4,
+              fill: 'none', stroke: col, 'stroke-width': 2.2, 'pointer-events': 'none'
+            }));
+          }
+        }
+
+        g.appendChild(svgEl('circle', {
+          cx: atom.x, cy: atom.y, r: m.radius,
+          fill: m.fill, stroke: m.stroke, 'stroke-width': 2.8
+        }));
+
+        g.appendChild(svgEl('circle', {
+          cx: atom.x - m.radius * 0.28, cy: atom.y - m.radius * 0.28, r: m.radius * 0.22,
+          fill: 'rgba(255,255,255,0.28)', 'pointer-events': 'none'
+        }));
+
+        const txt = svgEl('text', {
+          x: atom.x, y: atom.y + 6, 'text-anchor': 'middle',
+          fill: m.text, 'font-size': atom.type === 'H' ? '15' : '18', 'font-weight': '900',
+          'pointer-events': 'none', style: 'font-family:system-ui,sans-serif;user-select:none;'
+        });
+        txt.textContent = atom.type;
+        g.appendChild(txt);
+
+        if (interactive) {
+          g.addEventListener('pointerdown', ev => onAtomDown(ev, atom.id));
+          g.addEventListener('contextmenu', ev => { ev.preventDefault(); removeAtom(atom.id); });
+        }
+        return g;
+      }
+
+      function renderCanvas() {
+        const lTut = document.getElementById('layer-tutorial');
+        const lBonds = document.getElementById('layer-bonds');
+        const lPrev = document.getElementById('layer-preview');
+        const lLone = document.getElementById('layer-lonepairs');
+        const lAtoms = document.getElementById('layer-atoms');
+
+        lTut.innerHTML = '';
+        lBonds.innerHTML = '';
+        lPrev.innerHTML = '';
+        lLone.innerHTML = '';
+        lAtoms.innerHTML = '';
+
+        const byId = new Map(state.atoms.map(a => [a.id, a]));
+        const analysis = analyzeMolecule(state.atoms, state.edges);
+
+        // بررسی گام فعلی آموزش مرحله ۱
+        const tutStep = getOnboardingStep();
+        updateOnboardingUI(tutStep);
+
+        // دایره‌های هدف چشمک‌زن روی بوم برای گام ۲ و گام ۳ مرحله ۱
+        if (tutStep === 2 || tutStep === 3) {
+          const rect = document.getElementById('lab-svg').getBoundingClientRect();
+          const cx = rect.width / 2 || 300;
+          const cy = rect.height / 2 || 220;
+          let tx = cx - 65, ty = cy;
+          if (tutStep === 3 && state.atoms.length === 1) {
+            const a0 = state.atoms[0];
+            tx = a0.x + 125 < rect.width - 50 ? a0.x + 125 : a0.x - 125;
+            ty = a0.y;
+          }
+          const grp = svgEl('g', { 'pointer-events': 'none' });
+          grp.appendChild(svgEl('circle', {
+            cx: tx, cy: ty, r: 28,
+            fill: 'rgba(14, 165, 233, 0.12)', stroke: '#0284c7',
+            'stroke-width': 2.6, 'stroke-dasharray': '6 4',
+            class: 'svg-target-ring'
+          }));
+          const t = svgEl('text', {
+            x: tx, y: ty + 5, 'text-anchor': 'middle',
+            fill: '#0284c7', 'font-size': '13', 'font-weight': '800'
+          });
+          t.textContent = 'اینجا کلیک کن';
+          grp.appendChild(t);
+          lTut.appendChild(grp);
+        }
+
+        // پیوندها
+        state.edges.forEach(e => {
+          const a = byId.get(e.a), b = byId.get(e.b);
+          if (a && b) lBonds.appendChild(renderEdge(e, a, b, true));
+        });
+
+        // خط پیش‌نمایش حین کشیدن پیوند
+        if (state.bondStartId !== null) {
+          const sa = byId.get(state.bondStartId);
+          if (sa) {
+            lPrev.appendChild(svgEl('line', {
+              x1: sa.x, y1: sa.y, x2: state.pointer.x, y2: state.pointer.y,
+              stroke: state.activeTool === 'bond-dative' ? '#f59e0b' : '#0284c7',
+              'stroke-width': 3, 'stroke-dasharray': '7 5', 'stroke-linecap': 'round', 'pointer-events': 'none'
+            }));
+          }
+        }
+
+        // جفت‌های ناپیوندی در حالت آزاد
+        if (state.mode === 'free' && state.showFreeLonePairs) {
+          state.atoms.forEach(atom => {
+            const info = analysis.perAtom.get(atom.id);
+            if (info && info.loneElectrons >= 2) {
+              computeLoneDots(atom, state.atoms, state.edges, info.loneElectrons).forEach(pt => {
+                lLone.appendChild(svgEl('circle', {
+                  cx: pt.x, cy: pt.y, r: 3.2,
+                  fill: '#f59e0b', stroke: '#92400e', 'stroke-width': 0.8, 'pointer-events': 'none'
+                }));
+              });
+            }
+          });
+        }
+
+        // اتم‌ها
+        state.atoms.forEach(atom => {
+          lAtoms.appendChild(renderAtom(atom, analysis, {
+            interactive: true,
+            isSelected: state.bondStartId === atom.id,
+            showRing: state.mode === 'free',
+            tutHighlight: tutStep === 5 && atom.type === 'H'
+          }));
+        });
+
+        document.getElementById('canvas-empty-hint').style.opacity = (state.atoms.length === 0 && tutStep !== 2) ? '1' : '0';
+      }
+
+      /* ============================================================
+         ۱۰. سیستم آموزش تعاملی گام‌به‌گام (فقط برای مرحله ۱)
+         ============================================================ */
+      function getOnboardingStep() {
+        if (!state.onboardingActive || state.mode !== 'challenge' || state.stageIdx !== 0) {
+          return 0;
+        }
+        const hAtoms = state.atoms.filter(a => a.type === 'H');
+        const hasValidH2 = state.atoms.length === 2 && hAtoms.length === 2 &&
+          state.edges.some(e => e.covalent === 1 && !e.dativeDir);
+
+        if (hasValidH2) return 6;
+        if (state.atoms.length > 2 || state.atoms.some(a => a.type !== 'H')) return 99; // خطای اضافی حین آموزش
+        if (hAtoms.length === 0) {
+          return state.activeTool === 'atom-H' ? 2 : 1;
+        }
+        if (hAtoms.length === 1) {
+          return state.activeTool === 'atom-H' ? 3 : 1;
+        }
+        // دو اتم H روی بوم هست اما هنوز پیوند یگانه بینشان نیست
+        return state.activeTool === 'bond-1' ? 5 : 4;
+      }
+
+      function updateOnboardingUI(step) {
+        // پاکسازی تمام هایلایت‌های قبلی
+        document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+        const banner = document.getElementById('onboarding-banner');
+
+        if (!step) {
+          banner.classList.add('hidden');
+          return;
+        }
+
+        banner.classList.remove('hidden');
+        const badge = document.getElementById('onboarding-step-badge');
+        const text = document.getElementById('onboarding-step-text');
+
+        if (step === 1) {
+          badge.textContent = 'گام ۱ از ۶';
+          text.textContent = 'ابتدا روی اتم هیدروژن (H) کلیک کن.';
+          document.querySelector('[data-tool="atom-H"]').classList.add('tutorial-highlight');
+        } else if (step === 2) {
+          badge.textContent = 'گام ۲ از ۶';
+          text.textContent = 'حالا روی صفحه آزمایش کلیک کن تا اولین اتم H قرار بگیرد.';
+        } else if (step === 3) {
+          badge.textContent = 'گام ۳ از ۶';
+          text.textContent = 'یک بار دیگر کنار آن کلیک کن تا دومین اتم H را بگذاری.';
+        } else if (step === 4) {
+          badge.textContent = 'گام ۴ از ۶';
+          text.textContent = 'حالا ابزار پیوند یگانه (—) را انتخاب کن.';
+          document.querySelector('[data-tool="bond-1"]').classList.add('tutorial-highlight');
+        } else if (step === 5) {
+          badge.textContent = 'گام ۵ از ۶';
+          text.textContent = 'اول روی یکی از اتم‌های H و سپس روی اتم H دوم کلیک کن تا به هم وصل شوند.';
+        } else if (step === 6) {
+          badge.textContent = 'گام ۶ از ۶';
+          text.textContent = 'عالی! حالا روی دکمه «بررسی مولکول» کلیک کن تا نتیجه را ببینی.';
+          document.getElementById('btn-validate').classList.add('tutorial-highlight');
+        } else if (step === 99) {
+          badge.textContent = 'نکته';
+          text.textContent = 'برای ساخت H₂ فقط به ۲ اتم هیدروژن نیاز داریم؛ اتم‌های اضافی را با پاک‌کن حذف کن.';
+          document.querySelector('[data-tool="erase"]').classList.add('tutorial-highlight');
+        }
+      }
+
+      /* ============================================================
+         ۱۱. تعاملات ماوس و لمس روی بوم آزمایش
+         ============================================================ */
+      function getSvgPoint(ev) {
+        const rect = document.getElementById('lab-svg').getBoundingClientRect();
+        return { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
+      }
+
+      function addAtom(type, x, y) {
+        pushUndo();
+        const rect = document.getElementById('lab-svg').getBoundingClientRect();
+        const pad = 34;
+        state.atoms.push({
+          id: state.nextAtomId++,
+          type,
+          x: Math.max(pad, Math.min(rect.width - pad, x)),
+          y: Math.max(pad, Math.min(rect.height - pad, y))
+        });
+        SFX.pop();
+        hideCanvasFeedback();
+        renderCanvas();
+      }
+
+      function removeAtom(id) {
+        pushUndo();
+        state.atoms = state.atoms.filter(a => a.id !== id);
+        state.edges = state.edges.filter(e => e.a !== id && e.b !== id);
+        if (state.bondStartId === id) state.bondStartId = null;
+        SFX.erase();
+        hideCanvasFeedback();
+        renderCanvas();
+      }
+
+      function removeEdge(id) {
+        pushUndo();
+        state.edges = state.edges.filter(e => e.id !== id);
+        SFX.erase();
+        hideCanvasFeedback();
+        renderCanvas();
+      }
+
+      function connectAtoms(fromId, toId, tool) {
+        if (fromId === toId) return;
+        pushUndo();
+        let edge = state.edges.find(e => (e.a === fromId && e.b === toId) || (e.a === toId && e.b === fromId));
+        if (!edge) {
+          edge = { id: state.nextEdgeId++, a: fromId, b: toId, covalent: 0, dativeDir: null };
+          state.edges.push(edge);
+        }
+
+        if (tool === 'bond-dative') {
+          const dir = edge.a === fromId ? 'a->b' : 'b->a';
+          edge.dativeDir = edge.dativeDir === dir ? null : dir;
+          SFX.dative();
+        } else {
+          const ord = parseInt(tool.split('-')[1], 10);
+          edge.covalent = edge.covalent === ord ? 0 : ord;
+          SFX.bond();
+        }
+
+        if (edge.covalent === 0 && !edge.dativeDir) {
+          state.edges = state.edges.filter(e => e.id !== edge.id);
+        }
+        hideCanvasFeedback();
+        renderCanvas();
+      }
+
+      function atomAt(x, y) {
+        for (let i = state.atoms.length - 1; i >= 0; i--) {
+          const a = state.atoms[i];
+          if (Math.hypot(a.x - x, a.y - y) <= ATOMS[a.type].radius + 8) return a;
+        }
+        return null;
+      }
+
+      function onAtomDown(ev, id) {
+        if (ev.button === 2) return;
+        ev.stopPropagation();
+        const pt = getSvgPoint(ev);
+        state.pointer = pt;
+
+        if (state.activeTool === 'erase') {
+          removeAtom(id);
+          return;
+        }
+
+        if (state.activeTool.startsWith('bond-')) {
+          if (state.bondStartId === null) {
+            state.bondStartId = id;
+            state.isDrawDrag = true;
+            renderCanvas();
+          } else if (state.bondStartId === id) {
+            state.bondStartId = null;
+            state.isDrawDrag = false;
+            renderCanvas();
+          } else {
+            connectAtoms(state.bondStartId, id, state.activeTool);
+            state.bondStartId = null;
+            state.isDrawDrag = false;
+          }
+          return;
+        }
+
+        const atom = state.atoms.find(a => a.id === id);
+        if (atom) {
+          state.draggingId = id;
+          state.dragOffX = atom.x - pt.x;
+          state.dragOffY = atom.y - pt.y;
+          state.dragMoved = false;
+        }
+      }
+
+      function onEdgeDown(ev, id) {
+        if (ev.button === 2) return;
+        ev.stopPropagation();
+        if (state.activeTool === 'erase') {
+          removeEdge(id);
+          return;
+        }
+        if (state.activeTool.startsWith('bond-')) {
+          const e = state.edges.find(x => x.id === id);
+          if (!e) return;
+          if (state.activeTool === 'bond-dative') {
+            pushUndo();
+            if (e.dativeDir === 'a->b') e.dativeDir = 'b->a';
+            else if (e.dativeDir === 'b->a') e.dativeDir = null;
+            else e.dativeDir = 'a->b';
+            if (e.covalent === 0 && !e.dativeDir) state.edges = state.edges.filter(x => x.id !== id);
+            SFX.dative();
+            renderCanvas();
+          } else {
+            connectAtoms(e.a, e.b, state.activeTool);
+          }
+        }
+      }
+
+      function setupCanvasListeners() {
+        const svg = document.getElementById('lab-svg');
+        svg.addEventListener('pointerdown', ev => {
+          if (ev.button === 2) return;
+          const pt = getSvgPoint(ev);
+          state.pointer = pt;
+          if (state.activeTool.startsWith('atom-')) {
+            addAtom(state.activeTool.split('-')[1], pt.x, pt.y);
+            return;
+          }
+          if (state.bondStartId !== null) {
+            state.bondStartId = null;
+            state.isDrawDrag = false;
+            renderCanvas();
+          }
+        });
+
+        window.addEventListener('pointermove', ev => {
+          const pt = getSvgPoint(ev);
+          state.pointer = pt;
+          if (state.draggingId !== null) {
+            const atom = state.atoms.find(a => a.id === state.draggingId);
+            if (atom) {
+              if (!state.dragMoved) { pushUndo(); state.dragMoved = true; }
+              const rect = svg.getBoundingClientRect();
+              const pad = 28;
+              atom.x = Math.max(pad, Math.min(rect.width - pad, pt.x + state.dragOffX));
+              atom.y = Math.max(pad, Math.min(rect.height - pad, pt.y + state.dragOffY));
+              renderCanvas();
+            }
+          } else if (state.bondStartId !== null) {
+            renderCanvas();
+          }
+        });
+
+        window.addEventListener('pointerup', ev => {
+          if (state.draggingId !== null) {
+            state.draggingId = null;
+            state.dragMoved = false;
+          }
+          if (state.isDrawDrag && state.bondStartId !== null) {
+            const pt = getSvgPoint(ev);
+            const target = atomAt(pt.x, pt.y);
+            if (target && target.id !== state.bondStartId) {
+              connectAtoms(state.bondStartId, target.id, state.activeTool);
+              state.bondStartId = null;
+            }
+            state.isDrawDrag = false;
+          }
+        });
+
+        svg.addEventListener('contextmenu', ev => ev.preventDefault());
+      }
+
+      /* ============================================================
+         ۱۲. ابزارها و بازخورد شناور روی بوم
+         ============================================================ */
+      const TOOL_NAMES = {
+        'move': 'جابه‌جایی اتم‌ها',
+        'erase': 'پاک‌کن',
+        'atom-C': 'افزودن کربن (C)',
+        'atom-H': 'افزودن هیدروژن (H)',
+        'atom-O': 'افزودن اکسیژن (O)',
+        'atom-N': 'افزودن نیتروژن (N)',
+        'bond-1': 'پیوند یگانه (—)',
+        'bond-2': 'پیوند دوگانه (=)',
+        'bond-3': 'پیوند سه‌گانه (≡)',
+        'bond-dative': 'پیوند داتیو (→) — از دهنده به پذیرنده'
+      };
+
+      function setTool(tool) {
+        state.activeTool = tool;
+        state.bondStartId = null;
+        state.isDrawDrag = false;
+
+        document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tool === tool);
+        });
+
+        const isDative = tool === 'bond-dative';
+        const chip = document.getElementById('canvas-tool-chip');
+        chip.textContent = `ابزار فعال: ${TOOL_NAMES[tool] || tool}`;
+        chip.classList.toggle('dative-chip', isDative);
+        document.getElementById('canvas-stage').classList.toggle('dative-mode', isDative);
+
+        renderCanvas();
+      }
+
+      function hideCanvasFeedback() {
+        const fb = document.getElementById('canvas-feedback');
+        fb.classList.add('hidden');
+        fb.innerHTML = '';
+      }
+
+      function showCanvasFeedback(type, title, bodyHtml) {
+        const fb = document.getElementById('canvas-feedback');
+        fb.className = `canvas-feedback ${type}`;
+        fb.innerHTML = `
+          <div class="feedback-header">
+            <strong>${title}</strong>
+            <button class="feedback-close" type="button" aria-label="بستن">✕</button>
+          </div>
+          <div>${bodyHtml}</div>
+        `;
+        fb.querySelector('.feedback-close').addEventListener('click', hideCanvasFeedback);
+      }
+
+      function clearCanvas(saveSnap = true) {
+        if (saveSnap && (state.atoms.length || state.edges.length)) pushUndo();
+        state.atoms = [];
+        state.edges = [];
+        state.bondStartId = null;
+        hideCanvasFeedback();
+        renderCanvas();
+      }
+
+      function undo() {
+        if (!state.undoStack.length) return;
+        const snap = state.undoStack.pop();
+        state.atoms = snap.atoms;
+        state.edges = snap.edges;
+        state.bondStartId = null;
+        hideCanvasFeedback();
+        SFX.pop();
+        renderCanvas();
+      }
+
+      /* ============================================================
+         ۱۳. اعتبارسنجی مولکول (چالشی و آزاد)
+         ============================================================ */
+      function validateMolecule() {
+        const analysis = analyzeMolecule(state.atoms, state.edges);
+
+        if (state.mode === 'challenge') {
+          const stage = STAGES[state.stageIdx];
+
+          if (state.atoms.length === 0) {
+            SFX.error();
+            showCanvasFeedback('warning', 'میز آزمایش خالی است', 'ابتدا اتم‌های لازم را روی صفحه قرار دهید و به هم وصل کنید.');
+            return;
+          }
+
+          if (!countsMatch(state.atoms, stage.counts)) {
+            SFX.error();
+            const req = Object.entries(stage.counts).map(([el, c]) => `${toFa(c)} عدد ${el}`).join(' و ');
+            showCanvasFeedback('error', 'تعداد اتم‌ها با فرمول مرحله یکسان نیست', `برای ساخت <strong>${stage.name}</strong> دقیقاً به ${req} نیاز دارید.`);
+            return;
+          }
+
+          if (!analysis.isConnected) {
+            SFX.error();
+            showCanvasFeedback('error', 'همه اتم‌ها به هم وصل نیستند', 'اتم‌ها باید با پیوند به یکدیگر متصل شده و یک مولکول واحد بسازند.');
+            return;
+          }
+
+          if (!analysis.chemicallyValid) {
+            SFX.error();
+            const list = analysis.errors.map(e => `• ${e}`).join('<br/>');
+            showCanvasFeedback('error', 'ساختار پیوندها کامل یا درست نیست', list);
+            return;
+          }
+
+          const gUser = buildGraph(state.atoms, state.edges);
+          if (!isIsomorphic(gUser, stage.graph)) {
+            SFX.error();
+            showCanvasFeedback('warning', 'ساختار شما یک ایزومر دیگر است!', `این ساختار پایدار است اما آرایش پیوندهای <strong>${stage.name}</strong> متفاوت است. از دکمه «💡 راهنمایی» استفاده کنید.`);
+            return;
+          }
+
+          // ساختار کاملاً درست است! غیرفعال کردن آموزش مرحله ۱ و باز کردن مودال تأیید
+          state.onboardingActive = false;
+          updateOnboardingUI(0);
+          hideCanvasFeedback();
+          SFX.ok();
+          openQuizModal(stage, analysis);
+        } else {
+          // حالت آزاد
+          if (state.atoms.length < 2) {
+            SFX.error();
+            showCanvasFeedback('warning', 'اتم کافی وجود ندارد', 'حداقل ۲ اتم روی صفحه بگذارید و با پیوند به هم متصل کنید.');
+            return;
+          }
+          if (!analysis.isConnected) {
+            SFX.error();
+            showCanvasFeedback('error', 'مولکول یکپارچه نیست', 'همه اتم‌ها باید با پیوند به هم متصل باشند.');
+            return;
+          }
+          if (!analysis.chemicallyValid) {
+            SFX.error();
+            showCanvasFeedback('error', 'ساختار از نظر شیمیایی ناپایدار است', analysis.errors.map(e => `• ${e}`).join('<br/>'));
+            return;
+          }
+
+          SFX.ok();
+          const found = identifyMolecule(state.atoms, state.edges);
+          const formula = formatFormulaHtml(state.atoms);
+          const title = found
+            ? `✅ مولکول پایدار شناسایی شد: ${found.name} (${formula})`
+            : `✅ مولکول پایدار و معتبر (${formula})`;
+          const statsHtml = `
+            <div class="free-result-stats">
+              <span class="free-stat-pill">کل پیوندها: ${toFa(analysis.totalBonds)}</span>
+              ${analysis.totalDative > 0 ? `<span class="free-stat-pill" style="color:#b45309;">داتیو: ${toFa(analysis.totalDative)}</span>` : ''}
+              <span class="free-stat-pill">الکترون اشتراکی: ${toFa(analysis.sharedElectrons)}</span>
+              <span class="free-stat-pill">الکترون غیراشتراکی: ${toFa(analysis.nonBonding)}</span>
+            </div>
+          `;
+          showCanvasFeedback('success', title, statsHtml);
+        }
+      }
+
+      /* ============================================================
+         ۱۴. صفحه تأیید و آزمون ۳ مرحله‌ای متوالی (حالت چالشی)
+         ============================================================ */
+      function renderQuizPreview(revealLone) {
+        const svg = document.getElementById('quiz-preview-svg');
+        svg.innerHTML = '';
+        if (!state.atoms.length) return;
+
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        state.atoms.forEach(a => {
+          const pad = 48;
+          minX = Math.min(minX, a.x - pad);
+          maxX = Math.max(maxX, a.x + pad);
+          minY = Math.min(minY, a.y - pad);
+          maxY = Math.max(maxY, a.y + pad);
+        });
+        const w = Math.max(220, maxX - minX), h = Math.max(130, maxY - minY);
+        const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+        svg.setAttribute('viewBox', `${cx - w / 2} ${cy - h / 2} ${w} ${h}`);
+
+        const byId = new Map(state.atoms.map(a => [a.id, a]));
+        const analysis = analyzeMolecule(state.atoms, state.edges);
+
+        state.edges.forEach(e => {
+          const a = byId.get(e.a), b = byId.get(e.b);
+          if (a && b) svg.appendChild(renderEdge(e, a, b, false));
+        });
+
+        if (revealLone) {
+          state.atoms.forEach(atom => {
+            const info = analysis.perAtom.get(atom.id);
+            if (info && info.loneElectrons >= 2) {
+              computeLoneDots(atom, state.atoms, state.edges, info.loneElectrons).forEach((pt, idx) => {
+                const c = svgEl('circle', {
+                  cx: pt.x, cy: pt.y, r: 3.7,
+                  fill: '#f59e0b', stroke: '#92400e', 'stroke-width': 0.9,
+                  class: 'lone-dot-anim'
+                });
+                c.style.animationDelay = `${idx * 45}ms`;
+                svg.appendChild(c);
+              });
+            }
+          });
+        }
+
+        state.atoms.forEach(a => svg.appendChild(renderAtom(a, analysis, { interactive: false })));
+      }
+
+      function openQuizModal(stage, analysis) {
+        state.quiz = { step: 1, stats: analysis, stage };
+        document.getElementById('quiz-mol-label').textContent = stage.name;
+        document.getElementById('quiz-lone-tag').classList.add('hidden');
+        document.getElementById('quiz-question-box').classList.remove('hidden');
+        document.getElementById('quiz-complete-box').classList.add('hidden');
+
+        renderQuizPreview(false);
+        renderQuizStep();
+        document.getElementById('quiz-modal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('quiz-input').focus(), 100);
+      }
+
+      function renderQuizStep() {
+        const s = state.quiz.step;
+        [1, 2, 3].forEach(i => {
+          const el = document.getElementById(`q-step-${i}`);
+          el.classList.remove('active', 'done');
+          if (s > i) el.classList.add('done');
+          else if (s === i) el.classList.add('active');
+        });
+        document.getElementById('q-step-1').textContent = s > 1 ? '✓ ۱. تعداد پیوندها' : '۱. تعداد پیوندها';
+        document.getElementById('q-step-2').textContent = s > 2 ? '✓ ۲. الکترون اشتراکی' : '۲. الکترون اشتراکی';
+        document.getElementById('q-step-3').textContent = s > 3 ? '✓ ۳. الکترون غیراشتراکی' : '۳. الکترون غیراشتراکی';
+
+        const title = document.getElementById('quiz-q-title');
+        const sub = document.getElementById('quiz-q-sub');
+        const inp = document.getElementById('quiz-input');
+        const err = document.getElementById('quiz-error');
+
+        inp.value = '';
+        err.classList.add('hidden');
+
+        if (s === 1) {
+          title.textContent = 'سؤال ۱: این مولکول چند پیوند دارد؟';
+          sub.textContent = 'یگانه = ۱، دوگانه = ۲، سه‌گانه = ۳ و هر پیوند داتیو = ۱ پیوند.';
+        } else if (s === 2) {
+          title.textContent = 'سؤال ۲: این مولکول چند الکترون اشتراکی دارد؟';
+          sub.textContent = 'هر پیوند شیمیایی بین دو اتم از ۲ الکترون اشتراکی ساخته شده است.';
+        } else if (s === 3) {
+          title.textContent = 'سؤال ۳: این مولکول چند الکترون غیراشتراکی دارد؟';
+          sub.textContent = 'مجموع الکترون‌های ظرفیت اتم‌ها (H:1، C:4، N:5، O:6) منهای الکترون‌های اشتراکی.';
+        }
+        inp.focus();
+      }
+
+      function submitQuiz() {
+        const inp = document.getElementById('quiz-input');
+        const err = document.getElementById('quiz-error');
+        const raw = toEnDigits(inp.value);
+
+        if (raw === '' || !/^\d+$/.test(raw)) {
+          SFX.error();
+          err.textContent = 'لطفاً یک عدد صحیح وارد کنید.';
+          err.classList.remove('hidden');
+          inp.focus();
+          return;
+        }
+
+        const val = parseInt(raw, 10);
+        const { step, stats, stage } = state.quiz;
+
+        if (step === 1) {
+          if (val === stats.totalBonds) {
+            SFX.ok();
+            state.quiz.step = 2;
+            renderQuizStep();
+          } else {
+            SFX.error();
+            err.textContent = `دقیق نیست! تعداد کل خطوط پیوند در شکل بالا را بشمارید${stats.totalDative > 0 ? ' (هر پیکان داتیو هم ۱ پیوند حساب می‌شود)' : ''}.`;
+            err.classList.remove('hidden');
+          }
+        } else if (step === 2) {
+          if (val === stats.sharedElectrons) {
+            SFX.ok();
+            state.quiz.step = 3;
+            renderQuizStep();
+          } else {
+            SFX.error();
+            err.textContent = `دقیق نیست! این مولکول ${toFa(stats.totalBonds)} پیوند دارد؛ هر پیوند ۲ الکترون اشتراکی دارد.`;
+            err.classList.remove('hidden');
+          }
+        } else if (step === 3) {
+          if (val === stats.nonBonding) {
+            SFX.win();
+            state.quiz.step = 4;
+            finishQuizStage(stage, stats);
+          } else {
+            SFX.error();
+            const totalV = state.atoms.reduce((acc, a) => acc + ATOMS[a.type].valence, 0);
+            err.textContent = `راهنمایی: مجموع الکترون‌های ظرفیت اتم‌ها ${toFa(totalV)} است؛ تعداد الکترون‌های اشتراکی (${toFa(stats.sharedElectrons)}) را از آن کم کنید.`;
+            err.classList.remove('hidden');
+          }
+        }
+      }
+
+      function finishQuizStage(stage, stats) {
+        state.completed.add(stage.id);
+        saveProgress();
+        renderQuizStep();
+
+        // آشکار کردن جفت‌های ناپیوندی روی شکل مولکول
+        renderQuizPreview(true);
+        document.getElementById('quiz-lone-tag').classList.remove('hidden');
+
+        document.getElementById('quiz-question-box').classList.add('hidden');
+        document.getElementById('quiz-complete-box').classList.remove('hidden');
+
+        document.getElementById('quiz-summary-formula').innerHTML = stage.formulaHtml;
+        document.getElementById('sum-bonds').textContent = toFa(stats.totalBonds);
+        document.getElementById('sum-dative').textContent = toFa(stats.totalDative);
+        document.getElementById('sum-shared').textContent = toFa(stats.sharedElectrons);
+        document.getElementById('sum-lone').textContent = toFa(stats.nonBonding);
+        document.getElementById('quiz-fact').textContent = `💡 ${stage.fact}`;
+
+        const nextBtn = document.getElementById('btn-next-stage');
+        nextBtn.textContent = state.stageIdx < STAGES.length - 1 ? 'مرحله بعدی ←' : '🏆 پایان همه ۲۴ مرحله';
+      }
+
+      /* ============================================================
+         ۱۵. صفحه شروع هر مرحله (مرحله ۱ با شکل + آموزش، مراحل ۲-۲۴ فقط فرمول)
+         ============================================================ */
+      function showStageIntroModal(stage) {
+        const isStage1 = stage.id === 1;
+        document.getElementById('intro-stage-badge').textContent = `مرحله ${toFa(stage.id)} از ${toFa(STAGES.length)}`;
+
+        const msgEl = document.getElementById('intro-message');
+        const formulaBox = document.getElementById('intro-formula-box');
+        const stage1Graphic = document.getElementById('intro-stage1-graphic');
+        const dativePill = document.getElementById('intro-dative-pill');
+        const startBtn = document.getElementById('btn-start-stage-action');
+
+        if (isStage1) {
+          // فقط در مرحله ۱: نمایش شکل مولکول H—H و دکمه شروع آموزش گام‌به‌گام
+          msgEl.innerHTML = `در این مرحله می‌خواهیم مولکول <strong>هیدروژن (<span class="ltr">H<sub>2</sub></span>)</strong> را بسازیم.<br/>این مولکولی است که باید بسازی:`;
+          formulaBox.classList.add('hidden');
+          stage1Graphic.classList.remove('hidden');
+          dativePill.classList.add('hidden');
+          startBtn.textContent = 'شروع آموزش گام‌به‌گام ←';
+        } else {
+          // مراحل ۲ تا ۲۴: اصلاً شکل نشان داده نشود، فقط نام و فرمول مولکول
+          msgEl.innerHTML = `در این مرحله می‌خواهیم مولکول <strong>${stage.name}</strong> را بسازیم:`;
+          formulaBox.innerHTML = stage.formulaHtml;
+          formulaBox.classList.remove('hidden');
+          stage1Graphic.classList.add('hidden');
+          dativePill.classList.toggle('hidden', !stage.hasDative);
+          startBtn.textContent = 'شروع ساخت ←';
+        }
+
+        document.getElementById('stage-intro-modal').classList.remove('hidden');
+      }
+
+      function loadStage(idx, openIntro = true) {
+        state.stageIdx = Math.max(0, Math.min(STAGES.length - 1, idx));
+        const stage = STAGES[state.stageIdx];
+
+        // به‌روزرسانی هدر
+        const pill = document.getElementById('header-stage-pill');
+        pill.textContent = `مرحله ${toFa(stage.id)} از ${toFa(STAGES.length)}`;
+        pill.classList.remove('free-pill');
+        document.getElementById('header-sep').classList.remove('hidden');
+        document.getElementById('header-mol-name').textContent = stage.name;
+        const fEl = document.getElementById('header-formula');
+        fEl.innerHTML = stage.formulaHtml;
+        fEl.classList.remove('hidden');
+        document.getElementById('header-dative-tag').classList.toggle('hidden', !stage.hasDative);
+
+        // پاکسازی میز و وضعیت آموزش
+        state.onboardingActive = false;
+        state.undoStack = [];
+        clearCanvas(false);
+        setTool('move');
+
+        if (openIntro) {
+          showStageIntroModal(stage);
+        }
+      }
+
+      function enterMode(mode) {
+        state.mode = mode;
+        document.getElementById('welcome-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+
+        const isChallenge = mode === 'challenge';
+        document.getElementById('btn-open-stages').classList.toggle('hidden', !isChallenge);
+        document.getElementById('btn-stage-hint').classList.toggle('hidden', !isChallenge);
+        document.getElementById('btn-free-lonepairs').classList.toggle('hidden', isChallenge);
+
+        if (isChallenge) {
+          const firstUnfinished = STAGES.findIndex(s => !state.completed.has(s.id));
+          loadStage(firstUnfinished !== -1 ? firstUnfinished : 0, true);
+        } else {
+          state.onboardingActive = false;
+          updateOnboardingUI(0);
+          const pill = document.getElementById('header-stage-pill');
+          pill.textContent = 'حالت آزاد';
+          pill.classList.add('free-pill');
+          document.getElementById('header-sep').classList.remove('hidden');
+          document.getElementById('header-mol-name').textContent = 'ساخت و بررسی آزاد مولکول‌ها';
+          document.getElementById('header-formula').classList.add('hidden');
+          document.getElementById('header-dative-tag').classList.add('hidden');
+          state.undoStack = [];
+          clearCanvas(false);
+          setTool('move');
+        }
+      }
+
+      /* ============================================================
+         ۱۶. مودال فهرست ۲۴ مرحله
+         ============================================================ */
+      function openStagesModal() {
+        const body = document.getElementById('stages-modal-body');
+        body.innerHTML = '';
+
+        [1, 2, 3, 4].forEach(tier => {
+          const sec = document.createElement('div');
+          sec.className = 'tier-section';
+          const list = STAGES.filter(s => s.tier === tier);
+          const doneCount = list.filter(s => state.completed.has(s.id)).length;
+
+          sec.innerHTML = `
+            <div class="tier-title">
+              <span>${TIERS[tier]}</span>
+              <span style="font-size:0.78rem;color:var(--ink-muted);">${toFa(doneCount)} از ${toFa(list.length)}</span>
+            </div>
+          `;
+
+          const grid = document.createElement('div');
+          grid.className = 'stages-grid';
+
+          list.forEach(s => {
+            const idx = s.id - 1;
+            const isDone = state.completed.has(s.id);
+            const isCur = state.mode === 'challenge' && state.stageIdx === idx;
+            const tile = document.createElement('button');
+            tile.type = 'button';
+            tile.className = `stage-tile ${isDone ? 'done' : ''} ${isCur ? 'current' : ''}`;
+            tile.innerHTML = `
+              <div style="display:flex;justify-content:space-between;font-size:0.74rem;color:var(--ink-muted);">
+                <span>مرحله ${toFa(s.id)}</span>
+                <span>${isDone ? '✅' : (isCur ? '🔵' : '')}</span>
+              </div>
+              <div style="font-weight:800;font-size:0.88rem;color:var(--ink-primary);">${s.name}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+                <span class="header-formula ltr" style="font-size:0.78rem;">${s.formulaHtml}</span>
+                ${s.hasDative ? '<span class="header-dative-tag" style="font-size:0.68rem;">⚡ داتیو</span>' : ''}
+              </div>
+            `;
+            tile.addEventListener('click', () => {
+              document.getElementById('stages-modal').classList.add('hidden');
+              if (state.mode !== 'challenge') enterMode('challenge');
+              loadStage(idx, true);
+            });
+            grid.appendChild(tile);
+          });
+
+          sec.appendChild(grid);
+          body.appendChild(sec);
+        });
+
+        document.getElementById('stages-modal').classList.remove('hidden');
+      }
+
+      /* ============================================================
+         ۱۷. اتصال رویدادهای رابط کاربری
+         ============================================================ */
+      function bindUI() {
+        // صفحه ورود
+        document.getElementById('btn-start-challenge').addEventListener('click', () => enterMode('challenge'));
+        document.getElementById('btn-start-free').addEventListener('click', () => enterMode('free'));
+        document.getElementById('btn-welcome-guide').addEventListener('click', () => {
+          document.getElementById('guide-modal').classList.remove('hidden');
+        });
+
+        // هدر
+        document.getElementById('btn-go-home').addEventListener('click', () => {
+          state.onboardingActive = false;
+          updateOnboardingUI(0);
+          document.getElementById('game-screen').classList.add('hidden');
+          document.getElementById('welcome-screen').classList.remove('hidden');
+          updateProgressDisplays();
+        });
+        document.getElementById('btn-open-stages').addEventListener('click', openStagesModal);
+        document.getElementById('btn-open-guide').addEventListener('click', () => {
+          document.getElementById('guide-modal').classList.remove('hidden');
+        });
+        document.getElementById('btn-toggle-sound').addEventListener('click', ev => {
+          state.soundOn = !state.soundOn;
+          ev.currentTarget.textContent = state.soundOn ? '🔊' : '🔇';
+        });
+        document.getElementById('btn-stage-hint').addEventListener('click', () => {
+          const st = STAGES[state.stageIdx];
+          SFX.pop();
+          showCanvasFeedback('info', `💡 راهنمایی مرحله ${toFa(st.id)} (${st.name})`, st.hint);
+        });
+
+        // ابزارهای پنل کناری
+        document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+          btn.addEventListener('click', () => setTool(btn.dataset.tool));
+        });
+        document.getElementById('btn-clear').addEventListener('click', () => {
+          SFX.erase();
+          clearCanvas(true);
+        });
+        document.getElementById('btn-validate').addEventListener('click', validateMolecule);
+
+        // دکمه‌های کمکی بوم
+        document.getElementById('btn-undo').addEventListener('click', undo);
+        document.getElementById('btn-free-lonepairs').addEventListener('click', ev => {
+          state.showFreeLonePairs = !state.showFreeLonePairs;
+          ev.currentTarget.classList.toggle('active-toggle', state.showFreeLonePairs);
+          renderCanvas();
+        });
+        document.getElementById('btn-skip-tutorial').addEventListener('click', () => {
+          state.onboardingActive = false;
+          updateOnboardingUI(0);
+          renderCanvas();
+        });
+
+        // دکمه شروع داخل مودال معرفی مرحله
+        document.getElementById('btn-start-stage-action').addEventListener('click', () => {
+          document.getElementById('stage-intro-modal').classList.add('hidden');
+          // فعال کردن آموزش تعاملی گام‌به‌گام فقط برای مرحله ۱
+          if (state.mode === 'challenge' && state.stageIdx === 0) {
+            state.onboardingActive = true;
+            renderCanvas();
+          }
+        });
+
+        // مودال آزمون ۳ مرحله‌ای
+        document.getElementById('btn-close-quiz').addEventListener('click', () => {
+          document.getElementById('quiz-modal').classList.add('hidden');
+        });
+        document.getElementById('btn-submit-quiz').addEventListener('click', submitQuiz);
+        document.getElementById('quiz-input').addEventListener('keydown', ev => {
+          if (ev.key === 'Enter') submitQuiz();
+        });
+        document.getElementById('btn-next-stage').addEventListener('click', () => {
+          document.getElementById('quiz-modal').classList.add('hidden');
+          if (state.stageIdx < STAGES.length - 1) {
+            loadStage(state.stageIdx + 1, true);
+          } else {
+            openStagesModal();
+          }
+        });
+        document.getElementById('btn-quiz-stages').addEventListener('click', () => {
+          document.getElementById('quiz-modal').classList.add('hidden');
+          openStagesModal();
+        });
+
+        // بستن مودال مراحل و راهنما
+        document.getElementById('btn-close-stages').addEventListener('click', () => {
+          document.getElementById('stages-modal').classList.add('hidden');
+        });
+        document.getElementById('btn-close-guide').addEventListener('click', () => {
+          document.getElementById('guide-modal').classList.add('hidden');
+        });
+
+        // تب‌های راهنمای جامع
+        document.querySelectorAll('.guide-tab').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const target = btn.dataset.gtab;
+            document.querySelectorAll('.guide-tab').forEach(b => b.classList.toggle('active', b === btn));
+            ['atoms', 'bonds', 'math', 'howto'].forEach(id => {
+              document.getElementById(`gtab-${id}`).classList.toggle('hidden', id !== target);
+            });
+          });
+        });
+
+        // بستن با کلیک بیرون یا Escape
+        ['guide-modal', 'stages-modal'].forEach(id => {
+          const m = document.getElementById(id);
+          m.addEventListener('click', ev => { if (ev.target === m) m.classList.add('hidden'); });
+        });
+        window.addEventListener('keydown', ev => {
+          if (ev.key === 'Escape') {
+            document.getElementById('guide-modal').classList.add('hidden');
+            document.getElementById('stages-modal').classList.add('hidden');
+          }
+        });
+      }
+
+      /* ============================================================
+         ۱۸. شروع برنامه
+         ============================================================ */
+      window.addEventListener('DOMContentLoaded', () => {
+        loadProgress();
+        updateProgressDisplays();
+        setupCanvasListeners();
+        bindUI();
+      });
+    })();
+  </script>
+</body>
+</html>
